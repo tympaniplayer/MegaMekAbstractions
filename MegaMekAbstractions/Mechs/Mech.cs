@@ -1,3 +1,5 @@
+using MegaMekAbstractions.Common;
+
 namespace MegaMekAbstractions.Mechs;
 
 public class Mech
@@ -5,6 +7,15 @@ public class Mech
     public required string Chassis { get; set; }
     public required string Model { get; set; }
     public int MulId { get; set; }
+    public Configuration Configuration { get; set; }
+    public TechBase TechBase { get; set; }
+    public int Era { get; set; }
+    public required string Source { get; set; }
+    public RulesLevel RulesLevel { get; set; }
+    public GroundRole GroundRole { get; set; }
+    public required IList<Quirk> Quirks { get; set; } 
+    public int Mass { get; set; }
+    public required string Engine { get; set; }
     
     
     public static Gyro ToGyro(string gyro)
