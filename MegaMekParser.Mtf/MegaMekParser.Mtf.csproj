@@ -5,7 +5,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <PackageId>MegaMekParser.Mtf</PackageId>
-    <Version>1.1.0</Version>
+    <Version>1.1.1</Version>
     <Authors>Nate Palmer</Authors>
     <Description>A parser for BattleTech MegaMek MTF (Mech Template Format) files</Description>
     <PackageTags>megamek;battletech;mtf</PackageTags>
@@ -15,10 +15,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\MegaMekAbstractions\MegaMekAbstractions.csproj">
-      <Private>false</Private>
-      <ExcludeAssets>runtime</ExcludeAssets>
-    </ProjectReference>
+    <ProjectReference Include="..\MegaMekAbstractions\MegaMekAbstractions.csproj" />
   </ItemGroup>
 
 </Project>
