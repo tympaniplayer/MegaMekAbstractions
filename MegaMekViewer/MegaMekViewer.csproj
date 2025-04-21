@@ -8,7 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="MegaMekParser.Mtf" Version="1.1.1" />
+    <PackageReference Include="MegaMekParser.Mtf" Version="1.1.0" />
   </ItemGroup>
 
 </Project>
