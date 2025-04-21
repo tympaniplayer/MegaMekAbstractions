@@ -1,15 +1,21 @@
 This is not a valid MTF file.
 It's missing required sections and has invalid formatting.
-Version: Invalid
+
+chassis: Missing model
+mul id: invalid
 
 Mass: NotANumber
-Chassis: Missing Model Line
 
 Engine: Invalid Rating
 Structure: Unknown Type
 
 Heat Sinks: Invalid Format
 
-Armor: Invalid
+Armor:Standard(Inner Sphere)
+LA Armor:NotANumber
+RA Armor:Invalid
+LT Armor:Missing
+RT Armor:Error
+
 Invalid Section Names
 Missing Required Data

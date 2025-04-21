@@ -34,16 +34,20 @@ public class MtfParserErrorTests
         var action = () => _parser.ParseMechDataAsync(_invalidMtfContent);
 
         // Assert
-        await action.Should().ThrowAsync<MtfParseException>();
+        await action.Should().ThrowAsync<MtfParseException>()
+            .WithMessage("*Error parsing MTF file 'unknown' at line 0 in section 'Version': Version or chassis information not found*");
     }
 
     [Fact]
-    public void GetMtfVersion_WithInvalidVersion_ShouldThrowMtfParseException()
+    public void GetMtfVersion_WithInvalidContent_ShouldThrowMtfParseException()
     {
+        // Arrange
+        var invalidContent = "Not an MTF file\nNo chassis or version";
+
         // Act & Assert
-        _parser.Invoking(p => p.GetMtfVersion(_invalidMtfContent))
+        _parser.Invoking(p => p.GetMtfVersion(invalidContent))
             .Should().Throw<MtfParseException>()
-            .WithMessage("Error parsing MTF file 'unknown' at line 0 in section 'Version': Version information not found");
+            .WithMessage("Error parsing MTF file 'unknown' at line 0 in section 'Version': Version or chassis information not found");
     }
 
     [Theory]
@@ -80,9 +84,8 @@ public class MtfParserErrorTests
 
         // Assert
         sections.Should().NotBeNull();
-        sections.Should().Contain("Version");
         sections.Should().Contain("Mass");
-        sections.Should().Contain("Chassis");
+        sections.Should().Contain("chassis");
         sections.Should().NotContain("Weapons"); // Doesn't exist in invalid file
     }
 

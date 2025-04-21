@@ -23,17 +23,37 @@ public static class MtfConstants
         /// <summary>
         /// Chassis section identifier
         /// </summary>
-        public const string Chassis = "Chassis:";
+        public const string Chassis = "chassis:";
 
         /// <summary>
         /// Model section identifier
         /// </summary>
-        public const string Model = "Model:";
+        public const string Model = "model:";
 
         /// <summary>
         /// Tech Base section identifier
         /// </summary>
-        public const string TechBase = "Tech Base:";
+        public const string TechBase = "TechBase:";
+
+        /// <summary>
+        /// MUL ID section identifier
+        /// </summary>
+        public const string MulId = "mul id:";
+
+        /// <summary>
+        /// Role section identifier
+        /// </summary>
+        public const string Role = "role:";
+
+        /// <summary>
+        /// Quirk section identifier
+        /// </summary>
+        public const string Quirk = "quirk:";
+
+        /// <summary>
+        /// Weapon Quirk section identifier
+        /// </summary>
+        public const string WeaponQuirk = "weaponquirk:";
 
         /// <summary>
         /// Configuration section identifier

@@ -18,11 +18,18 @@ public class MtfParser : IMtfParser
         "Version",
         "Mass",
         "Chassis",
+        "chassis",
         "Model",
+        "model",
+        "mul id",
         "Tech Base",
+        "TechBase",
         "Era",
         "Source",
         "Rules Level",
+        "role",
+        "quirk",
+        "weaponquirk",
         "Config",
         "Walk MP",
         "Jump MP",
@@ -35,8 +42,8 @@ public class MtfParser : IMtfParser
         "Weapons"
     };
 
-    private static readonly Regex SectionHeaderRegex = new(@"^(" + string.Join("|", MainSections.Select(Regex.Escape)) + @"):.*$", RegexOptions.Compiled);
-    private const string VersionPattern = @"Version:\s*(.+)";
+    private static readonly Regex SectionHeaderRegex = new(@"^(" + string.Join("|", MainSections.Select(Regex.Escape)) + @"):.*$", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+    private const string VersionPattern = @"Version:\s*(.+)|chassis:.*";
 
     /// <inheritdoc />
     public async Task<Mech> ParseMechDataAsync(string mtfContent)
@@ -90,6 +97,12 @@ public class MtfParser : IMtfParser
             // Parse version first
             string version = GetMtfVersion(mtfContent);
 
+            // Check for required sections
+            if (!ValidateFormat(mtfContent))
+            {
+                throw new MtfParseException("Version or chassis information not found", "unknown", 0, "Version");
+            }
+
             // Parse each section
             await ParseSectionsAsync(lines, mech);
 
@@ -125,9 +138,11 @@ public class MtfParser : IMtfParser
 
             foreach (var line in lines)
             {
-                if (line.StartsWith(MtfConstants.Sections.Config))
+                if (line.StartsWith(MtfConstants.Sections.Config, StringComparison.OrdinalIgnoreCase) ||
+                    line.StartsWith("Config:", StringComparison.OrdinalIgnoreCase))
                     hasConfig = true;
-                else if (line.StartsWith(MtfConstants.Sections.Mass))
+                else if (line.StartsWith(MtfConstants.Sections.Mass, StringComparison.OrdinalIgnoreCase) ||
+                        line.StartsWith("Mass:", StringComparison.OrdinalIgnoreCase))
                     hasMass = true;
 
                 if (hasConfig && hasMass)
@@ -151,18 +166,19 @@ public class MtfParser : IMtfParser
         }
 
         var match = Regex.Match(mtfContent, VersionPattern, RegexOptions.Multiline);
-        if (!match.Success || string.IsNullOrWhiteSpace(match.Groups[1].Value))
+        if (!match.Success)
         {
-            throw new MtfParseException("Version information not found", "unknown", 0, "Version");
+            throw new MtfParseException("Version or chassis information not found", "unknown", 0, "Version");
+        }
+
+        // If no explicit version, default to "1.0" for MegaMek format
+        if (string.IsNullOrWhiteSpace(match.Groups[1].Value))
+        {
+            return "1.0";
         }
 
         var version = match.Groups[1].Value.Trim();
-        if (version.Equals("Invalid", StringComparison.OrdinalIgnoreCase))
-        {
-            throw new MtfParseException("Version information not found", "unknown", 0, "Version");
-        }
-
-        return version;
+        return version.Equals("Invalid", StringComparison.OrdinalIgnoreCase) ? "1.0" : version;
     }
 
     /// <inheritdoc />
@@ -178,7 +194,7 @@ public class MtfParser : IMtfParser
         // Find the start of the section
         for (int i = 0; i < lines.Length; i++)
         {
-            if (lines[i].StartsWith(sectionName))
+            if (lines[i].StartsWith(sectionName, StringComparison.OrdinalIgnoreCase))
             {
                 startIndex = i;
                 break;
@@ -233,7 +249,24 @@ public class MtfParser : IMtfParser
 
             for (int i = 0; i <= lines.Length; i++)
             {
-                if (i == lines.Length || (i < lines.Length && SectionHeaderRegex.IsMatch(lines[i])))
+                bool isEndOfSection = i == lines.Length;
+                if (!isEndOfSection)
+                {
+                    var line = lines[i].ToLower();
+                    if (line.StartsWith("quirk:"))
+                    {
+                        MtfSectionParsers.ParseSection("quirk:", new[] { lines[i] }, mech);
+                        continue;
+                    }
+                    else if (line.StartsWith("weaponquirk:"))
+                    {
+                        MtfSectionParsers.ParseSection("weaponquirk:", new[] { lines[i] }, mech);
+                        continue;
+                    }
+                    isEndOfSection = SectionHeaderRegex.IsMatch(lines[i]);
+                }
+
+                if (isEndOfSection)
                 {
                     // Process previous section if we have one
                     if (currentSectionStart != -1 && !string.IsNullOrEmpty(currentSection))

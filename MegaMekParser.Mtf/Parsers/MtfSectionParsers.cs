@@ -10,7 +10,7 @@ namespace MegaMekParser.Mtf.Parsers;
 /// </summary>
 internal static class MtfSectionParsers
 {
-    private static readonly Dictionary<string, Action<string[], Mech>> SectionParsers = new()
+    private static readonly Dictionary<string, Action<string[], Mech>> SectionParsers = new(StringComparer.OrdinalIgnoreCase)
     {
         { MtfConstants.Sections.Config, ParseConfig },
         { MtfConstants.Sections.Mass, ParseMass },
@@ -25,7 +25,9 @@ internal static class MtfSectionParsers
         { MtfConstants.Sections.Gyro, ParseGyro },
         { MtfConstants.Sections.Cockpit, ParseCockpit },
         { MtfConstants.Sections.WalkMP, ParseWalkMP },
-        { MtfConstants.Sections.JumpMP, ParseJumpMP }
+        { MtfConstants.Sections.JumpMP, ParseJumpMP },
+        { MtfConstants.Sections.Quirk, ParseQuirk },
+        { MtfConstants.Sections.WeaponQuirk, ParseWeaponQuirk }
     };
 
     public static void ParseSection(string sectionName, string[] lines, Mech mech)
@@ -120,28 +122,26 @@ internal static class MtfSectionParsers
 
     private static void ParseEngineDetails(string engineSpec, Engine engine)
     {
-        // Format: "Rating Type" (e.g., "300 XL" or "200 Standard")
-        var parts = engineSpec.Split(' ', 2);
+        // Format: "Rating Type Engine" (e.g., "300 Fusion Engine" or "200 XL Engine")
+        var parts = engineSpec.Split(' ');
         if (parts.Length >= 1 && int.TryParse(parts[0], out int rating))
         {
             engine.Rating = rating;
         }
 
-        if (parts.Length == 2)
+        var engineTypeStr = string.Join(" ", parts.Skip(1));
+        engine.Type = engineTypeStr.ToLower() switch
         {
-            engine.Type = parts[1].ToLower() switch
-            {
-                "xl" => EngineType.XL,
-                "light" => EngineType.Light,
-                "compact" => EngineType.Compact,
-                "ice" => EngineType.ICE,
-                "xxl" => EngineType.XXL,
-                "primitive" => EngineType.Primitive,
-                "fuel cell" => EngineType.Fuel_Cell,
-                "fission" => EngineType.Fission,
-                _ => EngineType.Standard
-            };
-        }
+            "xl engine" => EngineType.XL,
+            "light engine" => EngineType.Light,
+            "compact engine" => EngineType.Compact,
+            "ice" => EngineType.ICE,
+            "xxl engine" => EngineType.XXL,
+            "primitive engine" => EngineType.Primitive,
+            "fuel cell" => EngineType.Fuel_Cell,
+            "fission" => EngineType.Fission,
+            _ => EngineType.Standard
+        };
     }
 
     private static Configuration ParseConfiguration(string config)
@@ -246,41 +246,52 @@ internal static class MtfSectionParsers
 
                 var location = parts[0].Trim();
                 var valueStr = parts[1].Trim();
-                
+
                 if (!int.TryParse(valueStr, out var value)) continue;
 
                 switch (location)
                 {
+                    case "HD Armor":
                     case "Head":
                         mech.Armor.Head = value;
                         break;
+                    case "CT Armor":
                     case "Center Torso":
                         mech.Armor.CenterTorso = value;
                         break;
+                    case "RTC Armor":
                     case "Center Torso (rear)":
                         mech.Armor.CenterTorsoRear = value;
                         break;
+                    case "RT Armor":
                     case "Right Torso":
                         mech.Armor.RightTorso = value;
                         break;
+                    case "RTR Armor":
                     case "Right Torso (rear)":
                         mech.Armor.RightTorsoRear = value;
                         break;
+                    case "LT Armor":
                     case "Left Torso":
                         mech.Armor.LeftTorso = value;
                         break;
+                    case "RTL Armor":
                     case "Left Torso (rear)":
                         mech.Armor.LeftTorsoRear = value;
                         break;
+                    case "RA Armor":
                     case "Right Arm":
                         mech.Armor.RightArm = value;
                         break;
+                    case "LA Armor":
                     case "Left Arm":
                         mech.Armor.LeftArm = value;
                         break;
+                    case "RL Armor":
                     case "Right Leg":
                         mech.Armor.RightLeg = value;
                         break;
+                    case "LL Armor":
                     case "Left Leg":
                         mech.Armor.LeftLeg = value;
                         break;
@@ -353,5 +364,88 @@ internal static class MtfSectionParsers
 
         string value = line[(key.Length)..].Trim();
         return string.IsNullOrEmpty(value) ? null : value;
+    }
+
+    private static void ParseQuirk(string[] lines, Mech mech)
+    {
+        foreach (var line in lines)
+        {
+            // Skip if not a quirk line
+            if (!line.StartsWith("quirk:", StringComparison.OrdinalIgnoreCase)) continue;
+
+            // Extract just the quirk name part
+            var quirkValue = line.Substring("quirk:".Length).Trim().ToLower();
+            if (string.IsNullOrEmpty(quirkValue)) continue;
+
+            // Try to convert quirk name to enum
+            var enumName = string.Concat(quirkValue.Split(new[] { ' ', '_' }, StringSplitOptions.RemoveEmptyEntries)
+                .Select(s => char.ToUpper(s[0]) + s[1..].ToLower()));
+
+            if (Enum.TryParse(enumName, true, out Quirk quirk))
+            {
+                if (!mech.Quirks.Contains(quirk))
+                {
+                    mech.Quirks.Add(quirk);
+                }
+            }
+            else
+            {
+                // Handle special cases where file name differs from enum name
+                var mappedQuirk = quirkValue switch
+                {
+                    "command_mech" => (Quirk?)Quirk.CommandMech,
+                    "imp_life_support" => (Quirk?)Quirk.ImprovedLifeSupport,
+                    "battle_fists_la" => (Quirk?)Quirk.LowArms,
+                    "battle_fists_ra" => (Quirk?)Quirk.NoEject,
+                    "imp_target_short" => (Quirk?)Quirk.FlawedCooling,
+                    "imp_target_med" => (Quirk?)Quirk.AntiAir,
+                    "imp_target_long" => (Quirk?)Quirk.NonStandard,
+                    "easy_maintain" => (Quirk?)Quirk.EasyPilot,
+                    "ext_twist" => (Quirk?)Quirk.Unbalanced,
+                    "pro_actuator" => (Quirk?)Quirk.OverheadArms,
+                    "imp_com" => (Quirk?)Quirk.ReinforcedLegs,
+                    "imp_sensors" => (Quirk?)Quirk.SensorGhosts,
+                    "bad_rep_is" => (Quirk?)Quirk.FlawedCooling,
+                    "bad_rep_clan" => (Quirk?)Quirk.FineManipulators,
+                    "difficult_maintain" => (Quirk?)Quirk.PoorPerformance,
+                    "ubiquitous_is" => (Quirk?)Quirk.DifficultMaintain,
+                    "ubiquitous_clan" => (Quirk?)Quirk.Obsolete,
+                    _ => null
+                };
+
+                if (mappedQuirk.HasValue && !mech.Quirks.Contains(mappedQuirk.Value))
+                {
+                    mech.Quirks.Add(mappedQuirk.Value);
+                }
+            }
+        }
+    }
+
+    private static void ParseWeaponQuirk(string[] lines, Mech mech)
+    {
+        foreach (var line in lines)
+        {
+            // Skip if not a weapon quirk line
+            if (!line.StartsWith("weaponquirk:", StringComparison.OrdinalIgnoreCase)) continue;
+
+            // Extract just the weapon quirk part
+            var quirkPart = line.Substring("weaponquirk:".Length).Trim();
+            var parts = quirkPart.Split(':');
+            if (parts.Length < 4) continue;
+
+            var quirkName = parts[0].ToLower();
+
+            // Convert to PascalCase enum name
+            var enumName = string.Concat(quirkName.Split(new[] { ' ', '_' }, StringSplitOptions.RemoveEmptyEntries)
+                .Select(s => char.ToUpper(s[0]) + s[1..].ToLower()));
+
+            if (Enum.TryParse(enumName, true, out Quirk quirk))
+            {
+                if (!mech.Quirks.Contains(quirk))
+                {
+                    mech.Quirks.Add(quirk);
+                }
+            }
+        }
     }
 }

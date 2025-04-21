@@ -27,9 +27,8 @@ public class MtfFileReaderTests
 
         // Assert
         content.Should().NotBeNullOrEmpty();
-        content.Should().Contain("Version:1.0");
-        content.Should().Contain("Chassis:Marauder");
-        content.Should().Contain("Model:MAD-3R");
+        content.Should().Contain("chassis:Marauder");
+        content.Should().Contain("model:MAD-3R");
     }
 
     [Fact]

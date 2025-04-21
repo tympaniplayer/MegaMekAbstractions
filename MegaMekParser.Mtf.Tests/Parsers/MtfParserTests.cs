@@ -34,37 +34,44 @@ public class MtfParserTests
         mech.Chassis.Should().Be("Marauder");
         mech.Model.Should().Be("MAD-3R");
         mech.TechBase.Should().Be(TechBase.InnerSphere);
-        mech.Source.Should().Be("TRO 3039 - Early Succession War");
+        mech.Source.Should().Be("TRO: 3039");
         mech.Configuration.Should().Be(Configuration.Biped);
-        
+
         // Engine details
         mech.Engine.Rating.Should().Be(300);
-        mech.Engine.Type.Should().Be(EngineType.XL);
+        mech.Engine.Type.Should().Be(EngineType.Standard);
         mech.Engine.WalkingMP.Should().Be(4);
         mech.Engine.JumpingMP.Should().Be(0);
-        
+
         // Systems
         mech.Structure.Type.Should().Be(StructureType.Standard);
         mech.Gyro.Should().Be(Gyro.Standard);
         mech.Cockpit.Should().Be(Cockpit.Standard);
-        
+
         // Heat sinks
-        mech.HeatSinks.Type.Should().Be(HeatSinkType.Double);
+        mech.HeatSinks.Type.Should().Be(HeatSinkType.Single);
         mech.HeatSinks.Count.Should().Be(16);
-        
+
         // Armor
         mech.Armor.Type.Should().Be(ArmorType.Standard);
         mech.Armor.Head.Should().Be(9);
-        mech.Armor.CenterTorso.Should().Be(23);
-        mech.Armor.CenterTorsoRear.Should().Be(7);
+        mech.Armor.CenterTorso.Should().Be(35);
+        mech.Armor.CenterTorsoRear.Should().Be(10);
         mech.Armor.RightTorso.Should().Be(17);
-        mech.Armor.RightTorsoRear.Should().Be(6);
+        mech.Armor.RightTorsoRear.Should().Be(8);
         mech.Armor.LeftTorso.Should().Be(17);
-        mech.Armor.LeftTorsoRear.Should().Be(6);
-        mech.Armor.RightArm.Should().Be(17);
-        mech.Armor.LeftArm.Should().Be(17);
+        mech.Armor.LeftTorsoRear.Should().Be(8);
+        mech.Armor.RightArm.Should().Be(22);
+        mech.Armor.LeftArm.Should().Be(22);
         mech.Armor.RightLeg.Should().Be(18);
         mech.Armor.LeftLeg.Should().Be(18);
+
+        // Quirks
+        mech.Quirks.Should().Contain(Quirk.CommandMech);
+        mech.Quirks.Should().Contain(Quirk.HyperActuator);
+        mech.Quirks.Should().Contain(Quirk.LowProfile);
+        mech.Quirks.Should().Contain(Quirk.DirectTorsoMount);
+        mech.Quirks.Should().Contain(Quirk.ExposedLinkage);
     }
 
     [Fact]
@@ -111,7 +118,7 @@ public class MtfParserTests
 
         // Assert
         action.Should().Throw<MtfParseException>()
-            .Which.Message.Should().Contain("Version information not found");
+            .Which.Message.Should().Contain("Version or chassis information not found");
     }
 
     [Fact]
@@ -143,19 +150,18 @@ public class MtfParserTests
         var sections = _parser.GetSectionNames(_sampleMtfContent);
 
         // Assert
-        sections.Should().Contain(new[] {
-            "Version",
+            sections.Should().Contain(new[] {
             "Mass",
-            "Chassis",
-            "Model",
-            "Tech Base",
+            "chassis",
+            "model",
             "Config",
+            "TechBase",
             "Engine",
             "Structure",
-            "Gyro",
-            "Cockpit",
             "Heat Sinks",
-            "Armor"
+            "Armor",
+            "mul id",
+            "role"
         });
     }
 }

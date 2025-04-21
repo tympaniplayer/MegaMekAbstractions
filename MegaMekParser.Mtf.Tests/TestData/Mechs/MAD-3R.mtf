@@ -1,54 +1,55 @@
-Version:1.0
-Mass:75
-Chassis:Marauder
-Model:MAD-3R
-Tech Base:Inner Sphere
-Era:2819
-Source:TRO 3039 - Early Succession War
-Rules Level:1
+chassis:Marauder
+model:MAD-3R
+mul id:2038
 
 Config:Biped
+TechBase:Inner Sphere
+Era:2819
+Source:TRO: 3039
+Rules Level:1
+role:Sniper
+
+quirk:command_mech
+quirk:hyper_actuator
+quirk:low_profile
+weaponquirk:direct_torso_mount:RT:0:Autocannon/5
+weaponquirk:exposed_linkage:RT:0:Autocannon/5
+
+Mass:75
+Engine:300 Fusion Engine
+Structure:Standard
+Myomer:Standard
+
+Heat Sinks:16 Single
 Walk MP:4
 Jump MP:0
 
-Engine:300 XL
-Structure:Standard
-Gyro:Standard
-Cockpit:Standard
-Heat Sinks:16 Double
-
-Armor:Standard
-Head:9
-Center Torso:23
-Center Torso (rear):7
-Right Torso:17
-Right Torso (rear):6
-Left Torso:17
-Left Torso (rear):6
-Right Arm:17
-Left Arm:17
-Right Leg:18
-Left Leg:18
+Armor:Standard(Inner Sphere)
+LA Armor:22
+RA Armor:22
+LT Armor:17
+RT Armor:17
+CT Armor:35
+HD Armor:9
+LL Armor:18
+RL Armor:18
+RTL Armor:8
+RTR Armor:8
+RTC Armor:10
 
 Weapons:5
-PPC:Right Arm
-PPC:Left Arm
-Autocannon/5:Right Torso
-Medium Laser:Right Arm
-Medium Laser:Left ArmGreat, add some 
-Medium Laser
--Empty-
--Empty-
--Empty-
--Empty-
--Empty-
--Empty-
--Empty-
--Empty-
--Empty-
--Empty-
+Medium Laser, Left Arm
+Medium Laser, Right Arm
+PPC, Left Arm
+PPC, Right Arm
+Autocannon/5, Right Torso
 
-Right Arm:
+Left Arm:
+Shoulder
+Upper Arm Actuator
+Lower Arm Actuator
+PPC
+PPC
 PPC
 Medium Laser
 -Empty-
@@ -56,6 +57,15 @@ Medium Laser
 -Empty-
 -Empty-
 -Empty-
+
+Right Arm:
+Shoulder
+Upper Arm Actuator
+Lower Arm Actuator
+PPC
+PPC
+PPC
+Medium Laser
 -Empty-
 -Empty-
 -Empty-
@@ -63,10 +73,10 @@ Medium Laser
 -Empty-
 
 Left Torso:
-Heat Sink
-Heat Sink
-Heat Sink
-Heat Sink
+IS Ammo AC/5
+-Empty-
+-Empty-
+-Empty-
 -Empty-
 -Empty-
 -Empty-
@@ -81,7 +91,7 @@ Autocannon/5
 Autocannon/5
 Autocannon/5
 Autocannon/5
-Ammo AC/5:20
+-Empty-
 -Empty-
 -Empty-
 -Empty-
@@ -91,26 +101,32 @@ Ammo AC/5:20
 -Empty-
 
 Center Torso:
-Engine
-Engine
-Engine
+Fusion Engine
+Fusion Engine
+Fusion Engine
 Gyro
 Gyro
 Gyro
 Gyro
-Engine
-Engine
-Engine
-Heat Sink
-Heat Sink
+Fusion Engine
+Fusion Engine
+Fusion Engine
+-Empty-
+-Empty-
 
 Head:
 Life Support
 Sensors
 Cockpit
-Heat Sink
+-Empty-
 Sensors
 Life Support
+-Empty-
+-Empty-
+-Empty-
+-Empty-
+-Empty-
+-Empty-
 
 Left Leg:
 Hip
@@ -119,6 +135,12 @@ Lower Leg Actuator
 Foot Actuator
 Heat Sink
 Heat Sink
+-Empty-
+-Empty-
+-Empty-
+-Empty-
+-Empty-
+-Empty-
 
 Right Leg:
 Hip
@@ -127,3 +149,9 @@ Lower Leg Actuator
 Foot Actuator
 Heat Sink
 Heat Sink
+-Empty-
+-Empty-
+-Empty-
+-Empty-
+-Empty-
+-Empty-
