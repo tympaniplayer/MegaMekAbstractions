@@ -1,9 +1,12 @@
 name: Publish NuGet Packages
 
 on:
-  push:
-    tags:
-      - 'v*'
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Tag for release (e.g., v1.1.1)'
+        required: true
+        type: string
 
 jobs:
   build-and-publish:
