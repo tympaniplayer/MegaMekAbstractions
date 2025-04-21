@@ -1,0 +1,129 @@
+Version:1.0
+Mass:75
+Chassis:Marauder
+Model:MAD-3R
+Tech Base:Inner Sphere
+Era:2819
+Source:TRO 3039 - Early Succession War
+Rules Level:1
+
+Config:Biped
+Walk MP:4
+Jump MP:0
+
+Engine:300 XL
+Structure:Standard
+Gyro:Standard
+Cockpit:Standard
+Heat Sinks:16 Double
+
+Armor:Standard
+Head:9
+Center Torso:23
+Center Torso (rear):7
+Right Torso:17
+Right Torso (rear):6
+Left Torso:17
+Left Torso (rear):6
+Right Arm:17
+Left Arm:17
+Right Leg:18
+Left Leg:18
+
+Weapons:5
+PPC:Right Arm
+PPC:Left Arm
+Autocannon/5:Right Torso
+Medium Laser:Right Arm
+Medium Laser:Left ArmGreat, add some 
+Medium Laser
+-Empty-
+-Empty-
+-Empty-
+-Empty-
+-Empty-
+-Empty-
+-Empty-
+-Empty-
+-Empty-
+-Empty-
+
+Right Arm:
+PPC
+Medium Laser
+-Empty-
+-Empty-
+-Empty-
+-Empty-
+-Empty-
+-Empty-
+-Empty-
+-Empty-
+-Empty-
+-Empty-
+
+Left Torso:
+Heat Sink
+Heat Sink
+Heat Sink
+Heat Sink
+-Empty-
+-Empty-
+-Empty-
+-Empty-
+-Empty-
+-Empty-
+-Empty-
+-Empty-
+
+Right Torso:
+Autocannon/5
+Autocannon/5
+Autocannon/5
+Autocannon/5
+Ammo AC/5:20
+-Empty-
+-Empty-
+-Empty-
+-Empty-
+-Empty-
+-Empty-
+-Empty-
+
+Center Torso:
+Engine
+Engine
+Engine
+Gyro
+Gyro
+Gyro
+Gyro
+Engine
+Engine
+Engine
+Heat Sink
+Heat Sink
+
+Head:
+Life Support
+Sensors
+Cockpit
+Heat Sink
+Sensors
+Life Support
+
+Left Leg:
+Hip
+Upper Leg Actuator
+Lower Leg Actuator
+Foot Actuator
+Heat Sink
+Heat Sink
+
+Right Leg:
+Hip
+Upper Leg Actuator
+Lower Leg Actuator
+Foot Actuator
+Heat Sink
+Heat Sink

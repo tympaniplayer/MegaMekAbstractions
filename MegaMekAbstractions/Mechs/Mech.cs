@@ -1,9 +1,15 @@
+using System.Collections.ObjectModel;
 using MegaMekAbstractions.Common;
+using MegaMekAbstractions.Mechs.Equipment;
 
 namespace MegaMekAbstractions.Mechs;
 
+/// <summary>
+/// Represents a complete BattleMech
+/// </summary>
 public class Mech
 {
+    // Basic Information
     public required string Chassis { get; set; }
     public required string Model { get; set; }
     public int MulId { get; set; }
@@ -13,9 +19,69 @@ public class Mech
     public required string Source { get; set; }
     public RulesLevel RulesLevel { get; set; }
     public GroundRole GroundRole { get; set; }
-    public required IList<Quirk> Quirks { get; set; } 
+    public required IList<Quirk> Quirks { get; set; }
     public int Mass { get; set; }
-    public required string Engine { get; set; }
+
+    // Core Systems
+    public required Engine Engine { get; set; }
+    public required Gyro Gyro { get; set; }
+    public required Cockpit Cockpit { get; set; }
+    public required HeatSinks HeatSinks { get; set; }
+
+    // Structure and Armor
+    public required StructureValues Structure { get; set; }
+    public required ArmorValues Armor { get; set; }
+
+    // Equipment and Weapons
+    private readonly Dictionary<Location, LocationCriticals> _criticals;
+    public IReadOnlyDictionary<Location, LocationCriticals> Criticals => _criticals;
+
+    public Mech()
+    {
+        _criticals = new Dictionary<Location, LocationCriticals>();
+        foreach (Location location in Enum.GetValues<Location>())
+        {
+            // Skip rear locations as they don't have critical slots
+            if (location is Location.CenterTorsoRear or Location.LeftTorsoRear or Location.RightTorsoRear)
+                continue;
+
+            int slotCount = location switch
+            {
+                Location.Head => 6,
+                Location.CenterTorso => 12,
+                Location.LeftTorso => 12,
+                Location.RightTorso => 12,
+                Location.LeftArm => 12,
+                Location.RightArm => 12,
+                Location.LeftLeg => 6,
+                Location.RightLeg => 6,
+                _ => 0
+            };
+
+            if (slotCount > 0)
+            {
+                _criticals[location] = new LocationCriticals(location, slotCount);
+            }
+        }
+    }
+
+    /// <summary>
+    /// Gets all equipment installed on the mech
+    /// </summary>
+    public IEnumerable<MechEquipment> GetAllEquipment()
+    {
+        return _criticals.Values.SelectMany(loc => loc.GetEquipment());
+    }
+
+    /// <summary>
+    /// Gets equipment installed in a specific location
+    /// </summary>
+    public IEnumerable<MechEquipment> GetEquipment(Location location)
+    {
+        return _criticals.TryGetValue(location, out var criticals)
+            ? criticals.GetEquipment()
+            : Enumerable.Empty<MechEquipment>();
+    }
     
     
     public static Gyro ToGyro(string gyro)

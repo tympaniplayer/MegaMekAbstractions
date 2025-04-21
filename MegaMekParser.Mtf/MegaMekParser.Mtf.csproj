@@ -1,0 +1,24 @@
+﻿﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <PackageId>MegaMekParser.Mtf</PackageId>
+    <Version>1.0.0</Version>
+    <Authors>Nate Palmer</Authors>
+    <Description>A parser for BattleTech MegaMek MTF (Mech Template Format) files</Description>
+    <PackageTags>megamek;battletech;mtf</PackageTags>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Title>MegaMek MTF Parser</Title>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\MegaMekAbstractions\MegaMekAbstractions.csproj">
+      <Private>false</Private>
+      <ExcludeAssets>runtime</ExcludeAssets>
+    </ProjectReference>
+  </ItemGroup>
+
+</Project>

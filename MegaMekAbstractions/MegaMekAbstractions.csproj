@@ -1,9 +1,17 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-    <PropertyGroup>
-        <TargetFramework>net8.0</TargetFramework>
-        <ImplicitUsings>enable</ImplicitUsings>
-        <Nullable>enable</Nullable>
-    </PropertyGroup>
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <PackageId>MegaMekAbstractions</PackageId>
+    <Version>1.0.0</Version>
+    <Authors>Nate Palmer</Authors>
+    <Description>Abstractions and interfaces for BattleTech MegaMek parsers and data structures</Description>
+    <PackageTags>megamek;battletech;abstractions</PackageTags>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Title>MegaMek Abstractions</Title>
+  </PropertyGroup>
 
 </Project>

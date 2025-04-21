@@ -1,0 +1,15 @@
+This is not a valid MTF file.
+It's missing required sections and has invalid formatting.
+Version: Invalid
+
+Mass: NotANumber
+Chassis: Missing Model Line
+
+Engine: Invalid Rating
+Structure: Unknown Type
+
+Heat Sinks: Invalid Format
+
+Armor: Invalid
+Invalid Section Names
+Missing Required Data
