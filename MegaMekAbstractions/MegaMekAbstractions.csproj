@@ -5,7 +5,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <PackageId>MegaMekAbstractions</PackageId>
-    <Version>1.1.1</Version>
+    <Version>1.1.2</Version>
     <Authors>Nate Palmer</Authors>
     <Description>Abstractions and interfaces for BattleTech MegaMek parsers and data structures</Description>
     <PackageTags>megamek;battletech;abstractions</PackageTags>

@@ -1,7 +1,6 @@
 ﻿using MegaMekParser.Mtf.Parsers;
 using MegaMekAbstractions.Parsers.Interfaces;
-using System.Text.Json;
-using System.Text.Json.Serialization;
+using MegaMekViewer;
 
 if (args.Length == 0)
 {
@@ -22,16 +21,9 @@ try
     IMtfParser parser = new MtfParser();
     var mech = await parser.ParseMechDataAsync(content);
 
-    // Pretty print the mech details as JSON
-    var options = new JsonSerializerOptions
-    {
-        WriteIndented = true,
-        DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
-        Converters = { new JsonStringEnumConverter() }
-    };
-    
-    var json = JsonSerializer.Serialize(mech, options);
-    Console.WriteLine(json);
+    // Render the mech record sheet
+    var renderer = new RecordSheetRenderer();
+    renderer.RenderMech(mech);
 }
 catch (Exception ex)
 {

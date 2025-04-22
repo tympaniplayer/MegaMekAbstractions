@@ -105,6 +105,9 @@ public class MtfParser : IMtfParser
 
             // Parse each section
             await ParseSectionsAsync(lines, mech);
+            
+            // Process weapons and critical slots
+            MtfWeaponAndCriticalParser.ParseWeaponsAndCriticals(mtfContent, mech);
 
             return mech;
         }
