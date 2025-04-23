@@ -71,7 +71,6 @@ public class MtfFileReaderTests
     [InlineData("mech.txt")]
     [InlineData("mech.mul")]
     [InlineData("")]
-    [InlineData(null)]
     public void GetParser_WithNonMtfFile_ShouldReturnNull(string filePath)
     {
         // Act

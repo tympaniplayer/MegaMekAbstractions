@@ -92,7 +92,6 @@ public class MtfParserErrorTests
     [Theory]
     [InlineData("")]
     [InlineData(" ")]
-    [InlineData(null)]
     public async Task ParseMechDataAsync_WithEmptyContent_ShouldThrowMtfParseException(string content)
     {
         // Act

@@ -11,7 +11,7 @@ MegaMekAbstractions is a .NET library that provides abstractions for BattleTech 
 
 ## Installation
 
-```
+```shell
 dotnet add package MegaMekAbstractions
 ```
 

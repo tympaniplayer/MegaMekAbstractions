@@ -120,8 +120,12 @@ internal static class MtfSectionParsers
         }
     }
 
-    private static void ParseEngineDetails(string engineSpec, Engine engine)
+    private static void ParseEngineDetails(string? engineSpec, Engine engine)
     {
+        if(engineSpec == null)
+        {
+            throw new MtfParseException("Engine specification is null", "unknown", 0, "Engine");
+        }
         // Format: "Rating Type Engine" (e.g., "300 Fusion Engine" or "200 XL Engine")
         var parts = engineSpec.Split(' ');
         if (parts.Length >= 1 && int.TryParse(parts[0], out int rating))
@@ -144,21 +148,25 @@ internal static class MtfSectionParsers
         };
     }
 
-    private static Configuration ParseConfiguration(string config)
+    private static Configuration ParseConfiguration(string? config)
     {
-        return config.ToLower() switch
+        return config?.ToLower() switch
         {
             "biped" => Configuration.Biped,
             "tripod" => Configuration.Tripod,
             "quad" => Configuration.Quad,
             "quadvee" => Configuration.QuadVee,
             "lam" => Configuration.LAM,
-            _ => Configuration.Biped
+            _ => throw new MtfParseException($"Unknown configuration: {config}", "unknown", 0, "Configuration")
         };
     }
 
-    private static TechBase ParseTechBaseValue(string techBase)
+    private static TechBase ParseTechBaseValue(string? techBase)
     {
+        if (string.IsNullOrEmpty(techBase))
+        {
+            throw new MtfParseException("TechBase value is null or empty", "unknown", 0, "TechBase");
+        }
         return techBase.ToLower() switch
         {
             "clan" => TechBase.Clan,
@@ -307,6 +315,10 @@ internal static class MtfSectionParsers
             if (line.StartsWith(MtfConstants.Sections.Gyro))
             {
                 var value = GetValue(line, MtfConstants.Sections.Gyro);
+                if (string.IsNullOrEmpty(value))
+                {
+                    throw new MtfParseException("Gyro value is null or empty", "unknown", 0, "Gyro");
+                }
                 mech.Gyro = Mech.ToGyro(value);
             }
         }
@@ -319,6 +331,10 @@ internal static class MtfSectionParsers
             if (line.StartsWith(MtfConstants.Sections.Cockpit))
             {
                 var value = GetValue(line, MtfConstants.Sections.Cockpit);
+                if (string.IsNullOrEmpty(value))
+                {
+                    throw new MtfParseException("Cockpit value is null or empty", "unknown", 0, "Cockpit");
+                }
                 mech.Cockpit = Mech.ToCockpit(value);
             }
         }
@@ -359,10 +375,10 @@ internal static class MtfSectionParsers
     {
         if (string.IsNullOrEmpty(line) || !line.StartsWith(key))
         {
-            return null;
+            throw new MtfParseException($"Invalid line format: {line}", "unknown", 0, key);
         }
 
-        string value = line[(key.Length)..].Trim();
+        string value = line[key.Length..].Trim();
         return string.IsNullOrEmpty(value) ? null : value;
     }
 
@@ -374,11 +390,11 @@ internal static class MtfSectionParsers
             if (!line.StartsWith("quirk:", StringComparison.OrdinalIgnoreCase)) continue;
 
             // Extract just the quirk name part
-            var quirkValue = line.Substring("quirk:".Length).Trim().ToLower();
+            var quirkValue = line["quirk:".Length..].Trim().ToLower();
             if (string.IsNullOrEmpty(quirkValue)) continue;
 
             // Try to convert quirk name to enum
-            var enumName = string.Concat(quirkValue.Split(new[] { ' ', '_' }, StringSplitOptions.RemoveEmptyEntries)
+            var enumName = string.Concat(quirkValue.Split([' ', '_'], StringSplitOptions.RemoveEmptyEntries)
                 .Select(s => char.ToUpper(s[0]) + s[1..].ToLower()));
 
             if (Enum.TryParse(enumName, true, out Quirk quirk))
@@ -436,7 +452,7 @@ internal static class MtfSectionParsers
             var quirkName = parts[0].ToLower();
 
             // Convert to PascalCase enum name
-            var enumName = string.Concat(quirkName.Split(new[] { ' ', '_' }, StringSplitOptions.RemoveEmptyEntries)
+            var enumName = string.Concat(quirkName.Split([' ', '_'], StringSplitOptions.RemoveEmptyEntries)
                 .Select(s => char.ToUpper(s[0]) + s[1..].ToLower()));
 
             if (Enum.TryParse(enumName, true, out Quirk quirk))

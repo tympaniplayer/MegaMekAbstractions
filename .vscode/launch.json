@@ -1,0 +1,62 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "MegaMekDb.Console: Launch with Help",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build-megamekdb-console",
+            "program": "${workspaceFolder}/MegaMekDb.Console/bin/Debug/net9.0/MegaMekDb.Console.dll",
+            "args": ["help"],
+            "cwd": "${workspaceFolder}/MegaMekDb.Console",
+            "console": "internalConsole",
+            "stopAtEntry": false,
+            "env": {
+                "DOTNET_ENVIRONMENT": "Development"
+            }
+        },
+        {
+            "name": "MegaMekDb.Console: Import MTF Files",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build-megamekdb-console",
+            "program": "${workspaceFolder}/MegaMekDb.Console/bin/Debug/net9.0/MegaMekDb.Console.dll",
+            "args": ["import", "${input:mtfDirectoryPath}", "${input:recursive}"],
+            "cwd": "${workspaceFolder}/MegaMekDb.Console",
+            "console": "internalConsole",
+            "stopAtEntry": false,
+            "env": {
+                "DOTNET_ENVIRONMENT": "Development"
+            }
+        },
+        {
+            "name": "MegaMekDb.Console: Import TestData",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build-megamekdb-console",
+            "program": "${workspaceFolder}/MegaMekDb.Console/bin/Debug/net7.0/MegaMekDb.Console.dll",
+            "args": ["import", "${workspaceFolder}/MegaMekParser.Mtf.Tests/TestData/Mechs", "true"],
+            "cwd": "${workspaceFolder}/MegaMekDb.Console",
+            "console": "internalConsole",
+            "stopAtEntry": false,
+            "env": {
+                "DOTNET_ENVIRONMENT": "Development"
+            }
+        }
+    ],
+    "inputs": [
+        {
+            "id": "mtfDirectoryPath",
+            "type": "promptString",
+            "description": "Directory path containing MTF files to import",
+            "default": "${workspaceFolder}/MegaMekParser.Mtf.Tests/TestData/Mechs"
+        },
+        {
+            "id": "recursive",
+            "type": "pickString",
+            "description": "Import subdirectories recursively?",
+            "options": ["true", "false"],
+            "default": "true"
+        }
+    ]
+}

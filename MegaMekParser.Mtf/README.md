@@ -12,7 +12,7 @@ MegaMekParser.Mtf is a .NET library for parsing BattleTech MegaMek MTF (Mech Tem
 
 ## Installation
 
-```
+```shell
 dotnet add package MegaMekParser.Mtf
 ```
 

@@ -9,17 +9,7 @@ namespace MegaMekViewer;
 /// </summary>
 public class RecordSheetRenderer
 {
-    private const string HorizontalLine = "─────────────────────────────────────────────────────────────────────────────";
-    private const string VerticalLine = "│";
-    private const char CornerTopLeft = '┌';
-    private const char CornerTopRight = '┐';
-    private const char CornerBottomLeft = '└';
-    private const char CornerBottomRight = '┘';
-    private const char JunctionRight = '├';
-    private const char JunctionLeft = '┤';
-    private const char JunctionTop = '┬';
-    private const char JunctionBottom = '┴';
-    private const char Junction = '┼';
+    private const int DisplayWidth = 83;
 
     /// <summary>
     /// Renders a mech as a record sheet in the console
@@ -35,82 +25,83 @@ public class RecordSheetRenderer
 
         // Main sections using split layout
         Console.WriteLine();
+        Console.WriteLine(new string('=', DisplayWidth));
+        Console.WriteLine();
         RenderMainSection(mech);
 
         // Weapons and equipment
         Console.WriteLine();
+        Console.WriteLine(new string('=', DisplayWidth));
+        Console.WriteLine();
         RenderWeaponsAndEquipment(mech);
 
         // Critical hit table
+        Console.WriteLine();
+        Console.WriteLine(new string('=', DisplayWidth));
         Console.WriteLine();
         RenderCriticalHitTable(mech);
     }
 
     private void RenderHeader(Mech mech)
     {
-        Console.WriteLine($"{CornerTopLeft}{HorizontalLine}{CornerTopRight}");
-        Console.WriteLine($"{VerticalLine} BATTLETECH MECH RECORD SHEET {mech.Chassis} {mech.Model}".PadRight(HorizontalLine.Length + 2) + VerticalLine);
-        Console.WriteLine($"{JunctionRight}{HorizontalLine}{JunctionLeft}");
+        string title = $"BATTLETECH MECH RECORD SHEET {mech.Chassis} {mech.Model}";
+        Console.WriteLine(title.PadLeft((DisplayWidth + title.Length) / 2).PadRight(DisplayWidth));
+        Console.WriteLine(new string('-', DisplayWidth));
 
-        // Basic info row
-        Console.WriteLine($"{VerticalLine} Type: {mech.Chassis} {mech.Model}".PadRight(HorizontalLine.Length / 2 + 1) +
-                         $"Mass: {mech.Mass} tons ".PadLeft(HorizontalLine.Length / 2 + 1) + VerticalLine);
+        // Basic info row - using two-column layout
+        int halfWidth = DisplayWidth / 2;
 
-        Console.WriteLine($"{VerticalLine} Tech Base: {mech.TechBase}".PadRight(HorizontalLine.Length / 2 + 1) +
-                         $"Era: {mech.Era} ".PadLeft(HorizontalLine.Length / 2 + 1) + VerticalLine);
+        Console.WriteLine($"Type: {mech.Chassis} {mech.Model}".PadRight(halfWidth) +
+                         $"Mass: {mech.Mass} tons".PadRight(halfWidth));
 
-        Console.WriteLine($"{VerticalLine} Rules Level: {mech.RulesLevel}".PadRight(HorizontalLine.Length / 2 + 1) +
-                         $"Source: {mech.Source} ".PadLeft(HorizontalLine.Length / 2 + 1) + VerticalLine);
+        Console.WriteLine($"Tech Base: {mech.TechBase}".PadRight(halfWidth) +
+                         $"Era: {mech.Era}".PadRight(halfWidth));
 
-        Console.WriteLine($"{VerticalLine} Role: {mech.GroundRole}".PadRight(HorizontalLine.Length / 2 + 1) +
-                         $"Config: {mech.Configuration} ".PadLeft(HorizontalLine.Length / 2 + 1) + VerticalLine);
+        Console.WriteLine($"Rules Level: {mech.RulesLevel}".PadRight(halfWidth) +
+                         $"Source: {mech.Source}".PadRight(halfWidth));
+
+        Console.WriteLine($"Role: {mech.GroundRole}".PadRight(halfWidth) +
+                         $"Config: {mech.Configuration}".PadRight(halfWidth));
 
         // Quirks
         if (mech.Quirks.Count > 0)
         {
             string quirkList = string.Join(", ", mech.Quirks);
-            Console.WriteLine($"{VerticalLine} Quirks: {quirkList}".PadRight(HorizontalLine.Length + 2) + VerticalLine);
+            Console.WriteLine($"Quirks: {quirkList}".PadRight(DisplayWidth));
         }
-
-        Console.WriteLine($"{CornerBottomLeft}{HorizontalLine}{CornerBottomRight}");
     }
 
     private void RenderMainSection(Mech mech)
     {
-        // Top section: Movement and Heat
-        Console.WriteLine($"{CornerTopLeft}{HorizontalLine}{CornerTopRight}");
+        int halfWidth = DisplayWidth / 2;
 
-        // Movement data
-        Console.WriteLine($"{VerticalLine} MOVEMENT DATA ".PadRight(HorizontalLine.Length / 2 + 1) +
-                         $"HEAT DATA ".PadRight(HorizontalLine.Length / 2 + 1) + VerticalLine);
-        Console.WriteLine($"{JunctionRight}{new string('─', HorizontalLine.Length / 2)}{Junction}{new string('─', HorizontalLine.Length / 2)}{JunctionLeft}");
+        // Movement and Heat section titles
+        Console.WriteLine("MOVEMENT DATA".PadRight(halfWidth) + "HEAT DATA".PadRight(halfWidth));
+        Console.WriteLine(new string('-', DisplayWidth));
 
-        Console.WriteLine($"{VerticalLine} Engine: {mech.Engine.Rating} {mech.Engine.Type}".PadRight(HorizontalLine.Length / 2 + 1) +
-                         $"Heat Sinks: {mech.HeatSinks.Count} {mech.HeatSinks.Type}".PadRight(HorizontalLine.Length / 2 + 1) + VerticalLine);
+        // Movement and Heat data
+        Console.WriteLine($"Engine: {mech.Engine.Rating} {mech.Engine.Type}".PadRight(halfWidth) +
+                        $"Heat Sinks: {mech.HeatSinks.Count} {mech.HeatSinks.Type}".PadRight(halfWidth));
 
-        Console.WriteLine($"{VerticalLine} Walking: {mech.Engine.WalkingMP}".PadRight(HorizontalLine.Length / 2 + 1) +
-                         $"Heat Sink Locations: ".PadRight(HorizontalLine.Length / 2 + 1) + VerticalLine);
+        Console.WriteLine($"Walking: {mech.Engine.WalkingMP}".PadRight(halfWidth));
 
-        Console.WriteLine($"{VerticalLine} Running: {mech.Engine.RunningMP}".PadRight(HorizontalLine.Length / 2 + 1) +
-                         $"  {GetHeatSinkLocations(mech)}".PadRight(HorizontalLine.Length / 2 + 1) + VerticalLine);
+        Console.WriteLine($"Running: {mech.Engine.RunningMP}".PadRight(halfWidth));
 
-        Console.WriteLine($"{VerticalLine} Jumping: {mech.Engine.JumpingMP}".PadRight(HorizontalLine.Length / 2 + 1) +
-                         $" ".PadRight(HorizontalLine.Length / 2 + 1) + VerticalLine);
+        Console.WriteLine($"Jumping: {mech.Engine.JumpingMP}".PadRight(halfWidth) +
+                        $"".PadRight(halfWidth));
 
         // Cockpit and Gyro
-        Console.WriteLine($"{JunctionRight}{new string('─', HorizontalLine.Length / 2)}{Junction}{new string('─', HorizontalLine.Length / 2)}{JunctionLeft}");
-        Console.WriteLine($"{VerticalLine} Cockpit: {mech.Cockpit}".PadRight(HorizontalLine.Length / 2 + 1) +
-                         $"Gyro: {mech.Gyro}".PadRight(HorizontalLine.Length / 2 + 1) + VerticalLine);
+        Console.WriteLine(new string('-', DisplayWidth));
+        Console.WriteLine($"Cockpit: {mech.Cockpit}".PadRight(halfWidth) +
+                        $"Gyro: {mech.Gyro}".PadRight(halfWidth));
 
         // Armor and structure
-        Console.WriteLine($"{JunctionRight}{new string('─', HorizontalLine.Length / 2)}{Junction}{new string('─', HorizontalLine.Length / 2)}{JunctionLeft}");
-        Console.WriteLine($"{VerticalLine} ARMOR & STRUCTURE ".PadRight(HorizontalLine.Length + 2) + VerticalLine);
-        Console.WriteLine($"{JunctionRight}{HorizontalLine}{JunctionLeft}");
+        Console.WriteLine(new string('-', DisplayWidth));
+        Console.WriteLine("ARMOR & STRUCTURE".PadLeft((DisplayWidth + 16) / 2).PadRight(DisplayWidth));
+        Console.WriteLine(new string('-', DisplayWidth));
 
         // Armor diagram and values
         RenderArmorDiagram(mech);
-
-        Console.WriteLine($"{CornerBottomLeft}{HorizontalLine}{CornerBottomRight}");
     }
 
     private void RenderArmorDiagram(Mech mech)
@@ -118,74 +109,160 @@ public class RecordSheetRenderer
         // Basic mech diagram with armor/structure values
         var structureValues = mech.Structure;
         var armorValues = mech.Armor;
-        
-        // Draw the mech diagram with armor values - ensure proper alignment
-        Console.WriteLine($"{VerticalLine}                                 BATTLEMECH DIAGRAM                                {VerticalLine}");
-        Console.WriteLine($"{VerticalLine}                                                                                   {VerticalLine}");
-        Console.WriteLine($"{VerticalLine}                                      HEAD                                         {VerticalLine}");
-        Console.WriteLine($"{VerticalLine}                                   A: [{armorValues.Head,2}]                                       {VerticalLine}");
-        Console.WriteLine($"{VerticalLine}                                   S: ({structureValues.Head,2})                                       {VerticalLine}");
-        Console.WriteLine($"{VerticalLine}                                                                                   {VerticalLine}");
-        Console.WriteLine($"{VerticalLine}      LEFT ARM                   CENTER TORSO                    RIGHT ARM        {VerticalLine}");
-        Console.WriteLine($"{VerticalLine}      A: [{armorValues.LeftArm,2}]                  A: [{armorValues.CenterTorso,2}]                   A: [{armorValues.RightArm,2}]        {VerticalLine}");
-        Console.WriteLine($"{VerticalLine}      S: ({structureValues.LeftArm,2})                  S: ({structureValues.CenterTorso,2})                   S: ({structureValues.RightArm,2})        {VerticalLine}");
-        Console.WriteLine($"{VerticalLine}                                Rear: [{armorValues.CenterTorsoRear,2}]                                   {VerticalLine}");
-        Console.WriteLine($"{VerticalLine}                                                                                   {VerticalLine}");
-        Console.WriteLine($"{VerticalLine}      LEFT TORSO                                          RIGHT TORSO             {VerticalLine}");
-        Console.WriteLine($"{VerticalLine}      A: [{armorValues.LeftTorso,2}]                                          A: [{armorValues.RightTorso,2}]             {VerticalLine}");
-        Console.WriteLine($"{VerticalLine}      S: ({structureValues.LeftTorso,2})                                          S: ({structureValues.RightTorso,2})             {VerticalLine}");
-        Console.WriteLine($"{VerticalLine}      Rear: [{armorValues.LeftTorsoRear,2}]                                      Rear: [{armorValues.RightTorsoRear,2}]             {VerticalLine}");
-        Console.WriteLine($"{VerticalLine}                                                                                   {VerticalLine}");
-        Console.WriteLine($"{VerticalLine}                     LEFT LEG                    RIGHT LEG                         {VerticalLine}");
-        Console.WriteLine($"{VerticalLine}                     A: [{armorValues.LeftLeg,2}]                    A: [{armorValues.RightLeg,2}]                         {VerticalLine}");
-        Console.WriteLine($"{VerticalLine}                     S: ({structureValues.LeftLeg,2})                    S: ({structureValues.RightLeg,2})                         {VerticalLine}");
-        Console.WriteLine($"{VerticalLine}                                                                                   {VerticalLine}");
-        Console.WriteLine($"{VerticalLine} Armor Type: {armorValues.Type.ToString().PadRight(25)} Total: {GetTotalArmor(armorValues),-3}             {VerticalLine}");
-        Console.WriteLine($"{VerticalLine} Structure Type: {structureValues.Type.ToString().PadRight(22)} Total: {GetTotalStructure(structureValues),-3}             {VerticalLine}");
+
+        // Basic mech diagram alignment with fixed alignments
+        string centerTitle = "BATTLEMECH DIAGRAM";
+        Console.WriteLine(centerTitle.PadLeft((DisplayWidth + 18) / 2).PadRight(DisplayWidth));
+        Console.WriteLine();
+
+        // HEAD section
+        string head = "HEAD";
+        int headPosition = (DisplayWidth + head.Length) / 2;
+        Console.WriteLine(head.PadLeft(headPosition).PadRight(DisplayWidth));
+
+        string headArmor = $"A: [{armorValues.Head}]";
+        int headArmorPosition = (DisplayWidth + headArmor.Length) / 2;
+        Console.WriteLine(headArmor.PadLeft(headPosition).PadRight(DisplayWidth));
+
+        string headStruct = $"S: ({structureValues.Head})";
+        Console.WriteLine(headStruct.PadLeft(headPosition).PadRight(DisplayWidth));
+        Console.WriteLine();
+
+        // Left Torso, Center Torso, Right Torso row
+        string leftTorso = "LEFT TORSO";
+        string centerTorso = "CENTER TORSO";
+        string rightTorso = "RIGHT TORSO";
+
+        // Calculate positions based on DisplayWidth to center the CENTER TORSO
+        int centerPosition = DisplayWidth / 2;
+        int centerTorsoPosition = centerPosition - (centerTorso.Length / 2) + 1;
+        int rightTorsoPosition = centerTorso.Length + DisplayWidth - centerPosition - rightTorso.Length - 6;
+
+        // Build the string with proper positioning
+        string torsoRow = "";
+        torsoRow += leftTorso;
+        torsoRow += centerTorso.PadLeft(centerTorsoPosition);
+        torsoRow += rightTorso.PadLeft(rightTorsoPosition);
+        Console.WriteLine(torsoRow);
+
+        // Armor values with proper alignment
+        string leftTorsoArmor = $"A: [{armorValues.LeftTorso}]";
+        string centerTorsoArmor = $"A: [{armorValues.CenterTorso}]";
+        string rightTorsoArmor = $"A: [{armorValues.RightTorso}]";
+
+        string armorRow = "";
+        armorRow += leftTorsoArmor;
+        armorRow += centerTorsoArmor.PadLeft(centerTorsoPosition - 2);
+        armorRow += rightTorsoArmor.PadLeft(rightTorsoPosition + 1);
+        Console.WriteLine(armorRow);
+
+        // Structure values with proper alignment
+        string leftTorsoStruct = $"S: ({structureValues.LeftTorso})";
+        string centerTorsoStruct = $"S: ({structureValues.CenterTorso})";
+        string rightTorsoStruct = $"S: ({structureValues.RightTorso})";
+
+        string structRow = "";
+        structRow += leftTorsoStruct;
+        structRow += centerTorsoStruct.PadLeft(centerTorsoPosition - 2);
+        structRow += rightTorsoStruct.PadLeft(rightTorsoPosition + 1);
+        Console.WriteLine(structRow);
+
+        // Rear armor values with proper alignment
+        string leftTorsoRear = $"Rear: [{armorValues.LeftTorsoRear}]";
+        string centerTorsoRear = $"Rear: [{armorValues.CenterTorsoRear}]";
+        string rightTorsoRear = $"Rear: [{armorValues.RightTorsoRear}]";
+
+        string rearRow = "";
+        rearRow += leftTorsoRear;
+        rearRow += centerTorsoRear.PadLeft(centerTorsoPosition - 1);
+        rearRow += rightTorsoRear.PadLeft(rightTorsoPosition);
+        Console.WriteLine(rearRow);
+
+        Console.WriteLine();
+
+        // Left Arm, Right Arm row
+        string leftArm = "LEFT ARM";
+        string rightArm = "RIGHT ARM";
+        int rightArmPosition = DisplayWidth - rightArm.Length - 1;
+        Console.WriteLine($"{leftArm}{rightArm.PadLeft(rightArmPosition)}");
+
+        string leftArmArmor = $"A: [{armorValues.LeftArm}]";
+        string rightArmArmor = $"A: [{armorValues.RightArm}]".PadLeft(rightArmPosition - 1);
+        Console.WriteLine($"{leftArmArmor}{rightArmArmor}");
+
+        string leftArmStruct = $"S: ({structureValues.LeftArm})";
+        string rightArmStruct = $"S: ({structureValues.RightArm})".PadLeft(rightArmPosition - 1);
+        Console.WriteLine($"{leftArmStruct}{rightArmStruct}");
+
+
+
+        Console.WriteLine();
+
+        // Left Leg, Right Leg row
+        string leftLeg = "LEFT LEG";
+        string rightLeg = "RIGHT LEG";
+        int rightLegPosition = DisplayWidth - rightLeg.Length - 1;
+        Console.WriteLine($"{leftLeg}{rightLeg.PadLeft(rightLegPosition)}");
+
+        string leftLegArmor = $"A: [{armorValues.LeftLeg,2}]";
+        string rightLegArmor = $"A: [{armorValues.RightLeg,2}]".PadLeft(rightLegPosition - 1);
+        Console.WriteLine($"{leftLegArmor}{rightLegArmor}");
+
+        string leftLegStruct = $"S: ({structureValues.LeftLeg,2})";
+        string rightLegStruct = $"S: ({structureValues.RightLeg,2})".PadLeft(rightLegPosition - 1);
+        Console.WriteLine($"{leftLegStruct}{rightLegStruct}");
+
+        Console.WriteLine();
+
+        // Armor and structure type row
+        var armorType = $"Armor Type: {armorValues.Type}";
+        var structureType = $"Structure Type: {structureValues.Type}";
+        var totalArmorPosition = DisplayWidth - armorType.Length - 1;
+        var totalStructurePosition = DisplayWidth - structureType.Length - 1;
+        var totalArmor = $"Total: {GetTotalArmor(armorValues)}".PadLeft(totalArmorPosition);
+        var totalStructure = $"Total: {GetTotalStructure(structureValues)}".PadLeft(totalStructurePosition);
+        Console.WriteLine($"Armor Type: {armorValues.Type}{totalArmor}");
+        Console.WriteLine($"Structure Type: {structureValues.Type}{totalStructure}");
     }
 
     private void RenderWeaponsAndEquipment(Mech mech)
     {
-        Console.WriteLine($"{CornerTopLeft}{HorizontalLine}{CornerTopRight}");
-        Console.WriteLine($"{VerticalLine} WEAPONS AND EQUIPMENT                                                       {VerticalLine}");
-        Console.WriteLine($"{JunctionRight}{HorizontalLine}{JunctionLeft}");
+        Console.WriteLine("WEAPONS AND EQUIPMENT".PadLeft((DisplayWidth + 20) / 2).PadRight(DisplayWidth));
+        Console.WriteLine(new string('-', DisplayWidth));
 
         // Column headers
-        Console.WriteLine($"{VerticalLine} LOCATION     | WEAPON/EQUIPMENT                                            {VerticalLine}");
-        Console.WriteLine($"{JunctionRight}{HorizontalLine}{JunctionLeft}");
+        Console.WriteLine($"WEAPON/EQUIPMENT       LOCATION");
+        Console.WriteLine(new string('-', DisplayWidth));
 
-        // Group equipment by location using the criticals
-        var locationGroups = mech.Criticals
+        // Group equipment by name and location
+        var equipmentGroups = mech.Criticals
             .SelectMany(kv => kv.Value.GetEquipment().Select(eq => new { Location = kv.Key, Equipment = eq }))
-            .GroupBy(x => x.Location)
+            .GroupBy(x => x.Equipment.Name)
             .OrderBy(g => g.Key);
 
-        foreach (var group in locationGroups)
+        // Skip heat sinks as they'll be displayed as a total in the movement section
+        foreach (var group in equipmentGroups.Where(g => !g.Key.Contains("Heat Sink")))
         {
-            string locationName = GetLocationName(group.Key);
+            var locations = group
+                .GroupBy(x => x.Location)
+                .OrderBy(g => g.Key)
+                .Select(g => GetLocationName(g.Key));
 
-            foreach (var item in group.Select(g => g.Equipment))
-            {
-                Console.WriteLine($"{VerticalLine} {locationName.PadRight(12)} | {item.Name.PadRight(57)}{VerticalLine}");
-            }
+            string locationsList = string.Join(", ", locations);
+
+            // List by weapon name first, then location
+            Console.WriteLine($"{group.Key.PadRight(20)} {locationsList}");
         }
-
-        Console.WriteLine($"{CornerBottomLeft}{HorizontalLine}{CornerBottomRight}");
     }
 
     private void RenderCriticalHitTable(Mech mech)
     {
-        Console.WriteLine($"{CornerTopLeft}{HorizontalLine}{CornerTopRight}");
-        Console.WriteLine($"{VerticalLine} CRITICAL HIT TABLE                                                          {VerticalLine}");
-        Console.WriteLine($"{JunctionRight}{HorizontalLine}{JunctionLeft}");
+        Console.WriteLine("CRITICAL HITS TABLE".PadLeft((DisplayWidth + 18) / 2).PadRight(DisplayWidth));
+        Console.WriteLine(new string('-', DisplayWidth));
 
         // Columns to display side by side (e.g., left arm, right arm, left torso, right torso...)
         Location[] leftLocations = new[] { Location.Head, Location.LeftArm, Location.LeftTorso, Location.LeftLeg };
         Location[] rightLocations = new[] { Location.CenterTorso, Location.RightArm, Location.RightTorso, Location.RightLeg };
-
-        // Header for the left side and right side
-        Console.WriteLine($"{VerticalLine} {"LOCATION".PadRight(15)} SLOTS {"".PadRight(15)} | {"LOCATION".PadRight(15)} SLOTS {"".PadRight(15)}{VerticalLine}");
-        Console.WriteLine($"{JunctionRight}{HorizontalLine}{JunctionLeft}");
 
         // Maximum slot count needed for display alignment
         int maxSlots = 12;
@@ -197,11 +274,9 @@ public class RecordSheetRenderer
 
             if (i < leftLocations.Length - 1)
             {
-                Console.WriteLine($"{JunctionRight}{HorizontalLine}{JunctionLeft}");
+                Console.WriteLine(new string('-', DisplayWidth));
             }
         }
-
-        Console.WriteLine($"{CornerBottomLeft}{HorizontalLine}{CornerBottomRight}");
     }
 
     private void RenderLocationCriticalSlots(Mech mech, Location leftLocation, Location rightLocation, int maxSlots)
@@ -212,26 +287,68 @@ public class RecordSheetRenderer
         string leftName = GetLocationName(leftLocation);
         string rightName = GetLocationName(rightLocation);
 
-        // Get the maximum number of slots from both locations
+        // Count non-empty slots (excluding heat sinks)
         int leftSlotCount = leftCriticals?.Slots.Count ?? 0;
         int rightSlotCount = rightCriticals?.Slots.Count ?? 0;
-        int maxSlotCount = Math.Max(Math.Max(leftSlotCount, rightSlotCount), maxSlots);
+
+        // Don't display locations that have zero slots
+        if (leftSlotCount == 0 && rightSlotCount == 0)
+            return;
 
         // Print the location headers
-        Console.WriteLine($"{VerticalLine} {leftName.PadRight(15)} {" ".PadRight(15)} | {rightName.PadRight(15)} {" ".PadRight(15)}{VerticalLine}");
+        if (leftSlotCount > 0 && rightSlotCount > 0)
+        {
+            Console.WriteLine($"{leftName.PadRight(30)}    {rightName.PadRight(30)}");
+        }
+        else if (leftSlotCount > 0)
+        {
+            Console.WriteLine($"{leftName.PadRight(30)}");
+        }
+        else if (rightSlotCount > 0)
+        {
+            Console.WriteLine($"{"".PadRight(30)}    {rightName.PadRight(30)}");
+        }
 
-        // Print each slot side by side
+        // Maximum number of slots to display
+        int maxSlotCount = Math.Max(leftSlotCount, rightSlotCount);
+        maxSlotCount = Math.Min(maxSlotCount, maxSlots); // Cap at maxSlots
+
+        // Display all slots, including empty ones
         for (int i = 0; i < maxSlotCount; i++)
         {
-            string leftSlot = i < leftSlotCount && leftCriticals != null ?
-                $"{i + 1}. {GetSlotContents(leftCriticals.Slots[i])}" :
-                $"{i + 1}. {"".PadRight(15)}";
+            // Check if slot contains heat sink so we can skip showing it
+            bool leftIsHeatSink = i < leftSlotCount &&
+                leftCriticals?.Slots[i]?.Equipment != null &&
+                leftCriticals.Slots[i].Equipment.Name.Contains("Heat Sink");
 
-            string rightSlot = i < rightSlotCount && rightCriticals != null ?
-                $"{i + 1}. {GetSlotContents(rightCriticals.Slots[i])}" :
-                $"{i + 1}. {"".PadRight(15)}";
+            bool rightIsHeatSink = i < rightSlotCount &&
+                rightCriticals?.Slots[i]?.Equipment != null &&
+                rightCriticals.Slots[i].Equipment.Name.Contains("Heat Sink");
 
-            Console.WriteLine($"{VerticalLine} {leftSlot.PadRight(30)} | {rightSlot.PadRight(30)}{VerticalLine}");
+            // Get slot contents, skipping heat sinks
+            string leftContent = i < leftSlotCount
+                ? (leftIsHeatSink ? "-EMPTY-" : GetSlotContents(leftCriticals?.Slots[i]))
+                : "-EMPTY-";
+
+            string rightContent = i < rightSlotCount
+                ? (rightIsHeatSink ? "-EMPTY-" : GetSlotContents(rightCriticals?.Slots[i]))
+                : "-EMPTY-";
+
+            string leftText = $"{i + 1}. {leftContent}";
+            string rightText = $"{i + 1}. {rightContent}";
+
+            if (i < leftSlotCount && i < rightSlotCount)
+            {
+                Console.WriteLine($"{leftText.PadRight(30)}    {rightText.PadRight(30)}");
+            }
+            else if (i < leftSlotCount)
+            {
+                Console.WriteLine($"{leftText.PadRight(30)}");
+            }
+            else if (i < rightSlotCount)
+            {
+                Console.WriteLine($"{"".PadRight(30)}    {rightText.PadRight(30)}");
+            }
         }
     }
 
