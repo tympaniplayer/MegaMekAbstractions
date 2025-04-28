@@ -1,0 +1,19 @@
+[Flags]
+public enum DamageTypeFlags
+{
+    AreaEffect,
+    AntiInfantry,
+    Cluster,
+    DirectFireBallistic,
+    DirectFireEnergy,
+    Electronics,
+    HeatCausing,
+    Missile,
+    OneShot,
+    Pulse,
+    PointBlank,
+    RapidFire,
+    SwitchableAmmo,
+    VariableDamage,
+    Explosive,
+}

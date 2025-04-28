@@ -1,0 +1,98 @@
+{
+    "name": "MechTemplateFormat",
+    "scopeName": "source.mtf",
+    "patterns": [
+        {
+            "match": "(?i)^(Left Arm|Right Arm|Left Torso|Right Torso|Center Torso|Head|Left Leg|Right Leg|RTL|RTR|RTC):$",
+            "name": "entity.name.section.mtf"
+        },
+        {
+            "match": "(?i)^(overview|capabilities|history|deployment):",
+            "name": "markup.heading.description.mtf"
+        },
+        {
+            "match": "(?i)^(chassis|model|clanname|Config|techbase|era|source|rules level|role|mass|engine|structure|myomer|heat sinks|base chassis heat sinks|walk mp|jump mp|armor|manufacturer|primaryfactory|mul id|type|motion_type|tonnage|battle value|cost):(.*?)$",
+            "captures": {
+                "1": { "name": "keyword.other.mtf" },
+                "2": { "name": "string.unquoted.mtf" }
+            }
+        },
+        {
+            "match": "(?i)^systemmanufacturer:(CHASSIS|ENGINE|ARMOR|COMMUNICATIONS|TARGETING):.*$",
+            "name": "meta.manufacturer.mtf"
+        },
+        {
+            "match": "(?i)\\b(LA|RA|LT|RT|CT|HD|LL|RL|RTL|RTR|RTC)\\s+armor:\\s*(\\d+)",
+            "captures": {
+                "1": { "name": "keyword.other.location.mtf" },
+                "2": { "name": "constant.numeric.mtf" }
+            }
+        },
+        {
+            "match": "(?i)^(quirk|weaponquirk):([^:]+)(:([^:]+))?(:([^:]+))?(:([^:]+))?$",
+            "captures": {
+                "1": { "name": "keyword.control.mtf" },
+                "2": { "name": "entity.name.tag.mtf" },
+                "4": { "name": "support.type.mtf" },
+                "6": { "name": "constant.numeric.mtf" },
+                "8": { "name": "string.unquoted.mtf" }
+            }
+        },
+        {
+            "match": "(?i)\\b(Standard|Inner Sphere|IS|Mixed|Biped|Quad|LAM|Primitive|Advanced|Omnimech|Tripod|OmniMech|OmniFighter|Battle Armor|Protomech|Tank|Naval|Infantry|Support Vehicle)\\b",
+            "name": "constant.language.mtf"
+        },
+        {
+            "match": "(?i)\\b(Clan)\\b",
+            "name": "keyword.control.clan.mtf"
+        },
+        {
+            "match": "(?i)\\b(Mixed)\\b",
+            "name": "string.unquoted.mixed.mtf"
+        },
+        {
+            "match": "(?i)\\b(Fusion Engine|Standard|XL|Light|Compact|Armor|Structure|Myomer|Heat Sinks|Double|Single|Gyro|Cockpit|Life Support|Sensors|Endo Steel|TSM|MASC|C3 Master|C3 Slave|C3i|ECM|Guardian ECM|Beagle Active Probe|Light Active Probe|ActiveProbe|Targeting Computer|CASE|CASE II|Null Signature System|Coolant Pod|Jump Jet|Improved Jump Jet|Partial Wing|Endo-Composite|Ferro-Fibrous|Primitive|XXL|Heavy Duty|Cellular Ammunition Storage Equipment|Enhanced Optics|Reinforced|Heavy Duty Gyro|Composite|Command Console|Small Cockpit|Industrial Triple-Strength Myomer|IS Chainsaw|Clan Ferro-Lamellor|Triple Strength Myomer|Hardened|Industrial|Superheavy|Superheavy Tripod)\\b",
+            "name": "support.type.mtf"
+        },
+        {
+            "match": "(?i)\\b(Shoulder|Upper Arm Actuator|Lower Arm Actuator|Hand Actuator|Hip|Upper Leg Actuator|Lower Leg Actuator|Foot Actuator)\\b",
+            "name": "support.class.mtf"
+        },
+        {
+            "match": "(?i)-Empty-",
+            "name": "comment.line.empty.mtf"
+        },
+        {
+            "match": "(?i)\\b(CL)?(PPC|ER PPC|Snub-Nose PPC|Laser|Medium Laser|Small Laser|Large Laser|Pulse Laser|Medium Pulse Laser|Large Pulse Laser|Small Pulse Laser|LRM|SRM|MRM|Gauss|TAG|Machine Gun|ArtemisIV|Streak SRM|StreakSRM|Ultra AC|LB-X AC|Heavy Gauss|Light Gauss|HAG|RAC|Light PPC|Heavy PPC|ER Laser|ER Medium Laser|ER Small Laser|ER Large Laser|NARC|ATM|Flamer|Plasma Rifle|Arrow IV|Extended LRM|Rocket Launcher|Autocannon|AC|NarcBeacon|Thunderbolt|MML|Improved Heavy Gauss Rifle|iATM|C3 Computer|C3 Boosted System|AMS|Anti-Missile System|Anti-Personnel Pods|Taser|Plasma Cannon|Binary Laser|Chemical Laser|Heavy Flamer|Bombast Laser|Re-Engineered Laser|Variable Speed Pulse Laser|Hyper-Velocity AC|Light AC|Rail Gun|Silver Bullet Gauss|Mech Mortar|Rotary AC|ProtoMech AC|Heavy Machine Gun|Light Machine Gun|systemmanufacturer|overview|capabilities|deployment|history)[ -]?\\d*\\b",
+            "name": "string.unquoted.weapon.mtf"
+        },
+        {
+            "match": "(?i)\\b(Clan |IS )?(Ferro-Fibrous|Hardened|Reflective|Reactive|Light Ferro-Fibrous|Heavy Ferro-Fibrous|Ferro-Lamellor|Primitive|Stealth|Commercial|Industrial|Standard|Heavy)\\s*(Armor)?\\b",
+            "name": "support.type.armor.mtf"
+        },
+        {
+            "match": "(?i)\\b(IS |Clan )?(Ammo|Inferno|Artemis-capable|Artemis IV|Streak|Caseless|Half|Semi-guided|Narc|Pods|AC/[0-9]+|LRM-[0-9]+|SRM-[0-9]+|MRM-[0-9]+|iATM-[0-9]+|ATM-[0-9]+|Machine Gun|Anti-Missile System|AMS|Gauss|Thunderbolt|MML|Arrow IV|LB-X AC|Ultra AC|Light AC|Hyper-Velocity|Rotary AC|Mech Mortar|ProtoMech AC|Heavy Flamer|Light Machine Gun|Heavy Machine Gun|Silver Bullet|Narc-capable|Fragmentation|Thunder|Swarm|Tandem-Charge|Smoke|Mine|FASCAM|Acid|Precision|Thunder-Active|Thunder-Augmented|Thunder-Inferno|Thunder-Vibrabomb|Flare|Daisy Cutter)\\b",
+            "name": "support.type.ammo.mtf"
+        },
+        {
+            "match": "(?i)Weapons:\\d+",
+            "name": "markup.heading.weapons.mtf"
+        },
+        {
+            "match": "\\b\\d+\\b",
+            "name": "constant.numeric.mtf"
+        },
+        {
+            "match": "^#.*$",
+            "name": "comment.line.number-sign.mtf"
+        },
+        {
+            "match": "(?i)\\bmul id:\\s*\\d+\\b",
+            "name": "meta.mul-id.mtf"
+        },
+        {
+            "match": "\\(omnipod\\)",
+            "name": "keyword.control.omnipod.mtf"
+        }
+    ]
+}

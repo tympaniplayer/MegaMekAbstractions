@@ -4,9 +4,6 @@ using MegaMekAbstractions.Mechs.Equipment;
 
 namespace MegaMekViewer;
 
-/// <summary>
-/// Renders a Battletech record sheet style representation of a mech in the console
-/// </summary>
 public class RecordSheetRenderer
 {
     private const int DisplayWidth = 83;
@@ -44,56 +41,76 @@ public class RecordSheetRenderer
 
     private void RenderHeader(Mech mech)
     {
-        string title = $"BATTLETECH MECH RECORD SHEET {mech.Chassis} {mech.Model}";
+        string title = $"BATTLETECH MECH RECORD SHEET";
+        string subTitle = $"{mech.Chassis.ToUpper()} {mech.Model.ToUpper()}";
         Console.WriteLine(title.PadLeft((DisplayWidth + title.Length) / 2).PadRight(DisplayWidth));
+        Console.WriteLine(subTitle.PadLeft((DisplayWidth + subTitle.Length) / 2).PadRight(DisplayWidth));
         Console.WriteLine(new string('-', DisplayWidth));
 
         // Basic info row - using two-column layout
-        int halfWidth = DisplayWidth / 2;
+        var chassisInfo = $"Type: {mech.Chassis} {mech.Model}";
+        Console.WriteLine(chassisInfo +
+                         $"Mass: {mech.Mass} tons".PadLeft(DisplayWidth - chassisInfo.Length));
 
-        Console.WriteLine($"Type: {mech.Chassis} {mech.Model}".PadRight(halfWidth) +
-                         $"Mass: {mech.Mass} tons".PadRight(halfWidth));
+        var techBaseInfo = $"Tech Base: {mech.TechBase}";
+        Console.WriteLine(techBaseInfo +
+                         $"Era: {mech.Era}".PadLeft(DisplayWidth - techBaseInfo.Length));
 
-        Console.WriteLine($"Tech Base: {mech.TechBase}".PadRight(halfWidth) +
-                         $"Era: {mech.Era}".PadRight(halfWidth));
+        var rulesLevelInfo = $"Rules Level: {mech.RulesLevel}";
+        Console.WriteLine(rulesLevelInfo +
+                         $"Source: {mech.Source}".PadLeft(DisplayWidth - rulesLevelInfo.Length));
 
-        Console.WriteLine($"Rules Level: {mech.RulesLevel}".PadRight(halfWidth) +
-                         $"Source: {mech.Source}".PadRight(halfWidth));
-
-        Console.WriteLine($"Role: {mech.GroundRole}".PadRight(halfWidth) +
-                         $"Config: {mech.Configuration}".PadRight(halfWidth));
+        var roleInfo = $"Role: {mech.GroundRole}";
+        Console.WriteLine(roleInfo +
+                         $"Config: {mech.Configuration}".PadLeft(DisplayWidth - roleInfo.Length));
 
         // Quirks
         if (mech.Quirks.Count > 0)
         {
-            string quirkList = string.Join(", ", mech.Quirks);
-            Console.WriteLine($"Quirks: {quirkList}".PadRight(DisplayWidth));
+            var quirkList = new StringBuilder();
+            foreach (var quirk in mech.Quirks)
+            {
+                if (quirkList.Length + quirk.ToString().Length > DisplayWidth)
+                {
+                    Console.WriteLine(quirkList.ToString());
+                    quirkList.Clear();
+                }
+                else if (quirk != mech.Quirks.Last())
+                {
+                    quirkList.Append(quirk + ", ");
+                }
+                else
+                {
+                    quirkList.Append(quirk);
+                }
+            }
+            Console.WriteLine($"Quirks:");
+            Console.WriteLine(quirkList);
         }
     }
 
     private void RenderMainSection(Mech mech)
     {
-        int halfWidth = DisplayWidth / 2;
-
         // Movement and Heat section titles
-        Console.WriteLine("MOVEMENT DATA".PadRight(halfWidth) + "HEAT DATA".PadRight(halfWidth));
+        Console.WriteLine("MOVEMENT DATA" + "HEAT DATA".PadLeft(DisplayWidth - 13));
         Console.WriteLine(new string('-', DisplayWidth));
 
+        var engineData = $"Engine: {mech.Engine.Rating} {mech.Engine.Type}";
         // Movement and Heat data
-        Console.WriteLine($"Engine: {mech.Engine.Rating} {mech.Engine.Type}".PadRight(halfWidth) +
-                        $"Heat Sinks: {mech.HeatSinks.Count} {mech.HeatSinks.Type}".PadRight(halfWidth));
+        Console.WriteLine($"{engineData}" +
+                        $"Heat Sinks: {mech.HeatSinks.Count} {mech.HeatSinks.Type}".PadLeft(DisplayWidth - engineData.Length));
 
-        Console.WriteLine($"Walking: {mech.Engine.WalkingMP}".PadRight(halfWidth));
+        Console.WriteLine($"Walking: {mech.Engine.WalkingMP}");
 
-        Console.WriteLine($"Running: {mech.Engine.RunningMP}".PadRight(halfWidth));
+        Console.WriteLine($"Running: {mech.Engine.RunningMP}");
 
-        Console.WriteLine($"Jumping: {mech.Engine.JumpingMP}".PadRight(halfWidth) +
-                        $"".PadRight(halfWidth));
+        Console.WriteLine($"Jumping: {mech.Engine.JumpingMP}");
 
         // Cockpit and Gyro
         Console.WriteLine(new string('-', DisplayWidth));
-        Console.WriteLine($"Cockpit: {mech.Cockpit}".PadRight(halfWidth) +
-                        $"Gyro: {mech.Gyro}".PadRight(halfWidth));
+        var cockpitInfo = $"Cockpit: {mech.Cockpit}";
+        Console.WriteLine($"{cockpitInfo}" +
+                        $"Gyro: {mech.Gyro}".PadLeft(DisplayWidth - cockpitInfo.Length));
 
         // Armor and structure
         Console.WriteLine(new string('-', DisplayWidth));
@@ -231,7 +248,7 @@ public class RecordSheetRenderer
         Console.WriteLine(new string('-', DisplayWidth));
 
         // Column headers
-        Console.WriteLine($"WEAPON/EQUIPMENT       LOCATION");
+        Console.WriteLine($"WEAPON/EQUIPMENT".PadRight(20) + "LOCATION".PadLeft(DisplayWidth - 20));
         Console.WriteLine(new string('-', DisplayWidth));
 
         // Group equipment by name and location
@@ -251,7 +268,7 @@ public class RecordSheetRenderer
             string locationsList = string.Join(", ", locations);
 
             // List by weapon name first, then location
-            Console.WriteLine($"{group.Key.PadRight(20)} {locationsList}");
+            Console.WriteLine($"{group.Key.PadRight(20)}{locationsList.PadLeft(DisplayWidth - 20)}");
         }
     }
 
@@ -261,8 +278,8 @@ public class RecordSheetRenderer
         Console.WriteLine(new string('-', DisplayWidth));
 
         // Columns to display side by side (e.g., left arm, right arm, left torso, right torso...)
-        Location[] leftLocations = new[] { Location.Head, Location.LeftArm, Location.LeftTorso, Location.LeftLeg };
-        Location[] rightLocations = new[] { Location.CenterTorso, Location.RightArm, Location.RightTorso, Location.RightLeg };
+        Location[] leftLocations = [Location.Head, Location.LeftArm, Location.LeftTorso, Location.LeftLeg];
+        Location[] rightLocations = [Location.CenterTorso, Location.RightArm, Location.RightTorso, Location.RightLeg];
 
         // Maximum slot count needed for display alignment
         int maxSlots = 12;
@@ -298,15 +315,8 @@ public class RecordSheetRenderer
         // Print the location headers
         if (leftSlotCount > 0 && rightSlotCount > 0)
         {
-            Console.WriteLine($"{leftName.PadRight(30)}    {rightName.PadRight(30)}");
-        }
-        else if (leftSlotCount > 0)
-        {
-            Console.WriteLine($"{leftName.PadRight(30)}");
-        }
-        else if (rightSlotCount > 0)
-        {
-            Console.WriteLine($"{"".PadRight(30)}    {rightName.PadRight(30)}");
+            var rightNamePosition = DisplayWidth - leftName.Length;
+            Console.WriteLine($"{leftName}{rightName.PadLeft(rightNamePosition)}{Environment.NewLine}");
         }
 
         // Maximum number of slots to display
@@ -316,22 +326,13 @@ public class RecordSheetRenderer
         // Display all slots, including empty ones
         for (int i = 0; i < maxSlotCount; i++)
         {
-            // Check if slot contains heat sink so we can skip showing it
-            bool leftIsHeatSink = i < leftSlotCount &&
-                leftCriticals?.Slots[i]?.Equipment != null &&
-                leftCriticals.Slots[i].Equipment.Name.Contains("Heat Sink");
-
-            bool rightIsHeatSink = i < rightSlotCount &&
-                rightCriticals?.Slots[i]?.Equipment != null &&
-                rightCriticals.Slots[i].Equipment.Name.Contains("Heat Sink");
-
-            // Get slot contents, skipping heat sinks
+            // Get slot contents
             string leftContent = i < leftSlotCount
-                ? (leftIsHeatSink ? "-EMPTY-" : GetSlotContents(leftCriticals?.Slots[i]))
+                ? GetSlotContents(leftCriticals?.Slots[i])
                 : "-EMPTY-";
 
             string rightContent = i < rightSlotCount
-                ? (rightIsHeatSink ? "-EMPTY-" : GetSlotContents(rightCriticals?.Slots[i]))
+                ? GetSlotContents(rightCriticals?.Slots[i])
                 : "-EMPTY-";
 
             string leftText = $"{i + 1}. {leftContent}";
@@ -339,15 +340,15 @@ public class RecordSheetRenderer
 
             if (i < leftSlotCount && i < rightSlotCount)
             {
-                Console.WriteLine($"{leftText.PadRight(30)}    {rightText.PadRight(30)}");
+                Console.WriteLine($"{leftText}{rightText.PadLeft(DisplayWidth - leftText.Length)}");
             }
             else if (i < leftSlotCount)
             {
-                Console.WriteLine($"{leftText.PadRight(30)}");
+                Console.WriteLine($"{leftText}");
             }
             else if (i < rightSlotCount)
             {
-                Console.WriteLine($"{"".PadRight(30)}    {rightText.PadRight(30)}");
+                Console.WriteLine($"{rightText.PadLeft(DisplayWidth)}");
             }
         }
     }
@@ -371,21 +372,14 @@ public class RecordSheetRenderer
         };
     }
 
-    private string GetSlotContents(CriticalSlot slot)
+    private string GetSlotContents(CriticalSlot? slot)
     {
         if (slot == null || slot.Equipment == null)
         {
             return "-Empty-";
         }
 
-        // Break equipment name into smaller parts if needed
-        string name = slot.Equipment.Name;
-        if (name.Length > 15)
-        {
-            name = name[..15];
-        }
-
-        return name;
+        return slot.Equipment.Name;
     }
 
     private int GetTotalArmor(ArmorValues armor)

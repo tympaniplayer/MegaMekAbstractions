@@ -17,7 +17,7 @@ public class EquipmentEntity
     
     // For weapons
     public int? Heat { get; set; }
-    public string? Damage { get; set; }
+    public int? Damage { get; set; }
     public int? MinimumRange { get; set; }
     public int? ShortRange { get; set; }
     public int? MediumRange { get; set; }

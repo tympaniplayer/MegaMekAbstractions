@@ -1,0 +1,42 @@
+{
+    "name": "mtf-syntax",
+    "publisher": "Nate Palmer",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/tympaniplayer/MegaMekAbstractions"
+    },
+    "displayName": "MTF Syntax Highlighter",
+    "description": "Syntax highlighting for MegaMek MTF (Mech Template Format) files",
+    "version": "0.1.0",
+    "author": {
+        "name": "MegaMek"
+    },
+    "engines": {
+        "vscode": "^1.60.0"
+    },
+    "categories": [
+        "Other"
+    ],
+    "contributes": {
+        "languages": [
+            {
+                "id": "mtf",
+                "aliases": [
+                    "MechTemplateFormat",
+                    "mtf"
+                ],
+                "extensions": [
+                    ".mtf"
+                ],
+                "configuration": "./language-configuration.json"
+            }
+        ],
+        "grammars": [
+            {
+                "language": "mtf",
+                "scopeName": "source.mtf",
+                "path": "./syntaxes/mtf.tmLanguage.json"
+            }
+        ]
+    }
+}

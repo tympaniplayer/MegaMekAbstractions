@@ -122,7 +122,7 @@ internal static class MtfSectionParsers
 
     private static void ParseEngineDetails(string? engineSpec, Engine engine)
     {
-        if(engineSpec == null)
+        if (engineSpec == null)
         {
             throw new MtfParseException("Engine specification is null", "unknown", 0, "Engine");
         }
@@ -153,9 +153,13 @@ internal static class MtfSectionParsers
         return config?.ToLower() switch
         {
             "biped" => Configuration.Biped,
+            "biped omnimech" => Configuration.Biped,
+            "tripod omnimech" => Configuration.Tripod,
             "tripod" => Configuration.Tripod,
             "quad" => Configuration.Quad,
+            "quad omnimech" => Configuration.Quad,
             "quadvee" => Configuration.QuadVee,
+            "quadvee omnimech" => Configuration.QuadVee,
             "lam" => Configuration.LAM,
             _ => throw new MtfParseException($"Unknown configuration: {config}", "unknown", 0, "Configuration")
         };

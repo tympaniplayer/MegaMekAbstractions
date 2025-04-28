@@ -258,12 +258,12 @@ public class MtfParser : IMtfParser
                     var line = lines[i].ToLower();
                     if (line.StartsWith("quirk:"))
                     {
-                        MtfSectionParsers.ParseSection("quirk:", new[] { lines[i] }, mech);
+                        MtfSectionParsers.ParseSection("quirk:", [lines[i]], mech);
                         continue;
                     }
                     else if (line.StartsWith("weaponquirk:"))
                     {
-                        MtfSectionParsers.ParseSection("weaponquirk:", new[] { lines[i] }, mech);
+                        MtfSectionParsers.ParseSection("weaponquirk:", [lines[i]], mech);
                         continue;
                     }
                     isEndOfSection = SectionHeaderRegex.IsMatch(lines[i]);

@@ -63,7 +63,7 @@ public class MtfBulkImportService
         Dictionary<string, HashSet<string>> existingMechs = new();
 
         // Process each file
-        foreach (var filePath in mtfFiles)
+        foreach (var filePath in mtfFiles.Take(100))
         {
             try
             {
@@ -73,32 +73,32 @@ public class MtfBulkImportService
                 
                 // Check if file already exists in the database by exact content hash
                 var fileHash = CalculateHash(fileContent);
-                var existingMech = await _dbContext.Mechs.FirstOrDefaultAsync(m => m.FileHash == fileHash);
+                //var existingMech = await _dbContext.Mechs.FirstOrDefaultAsync(m => m.FileHash == fileHash);
                 
-                if (existingMech != null)
-                {
-                    skipped++;
-                    _logger.LogInformation("Skipped MTF file (already exists): {FilePath}", filePath);
-                    continue;
-                }
+                // if (existingMech != null)
+                // {
+                //     skipped++;
+                //     _logger.LogInformation("Skipped MTF file (already exists): {FilePath}", filePath);
+                //     continue;
+                // }
                 
                 // Check if a mech with the same chassis and model exists
                 var content = await _mtfParser.ParseMechDataAsync(fileContent);
-                existingMech = await _dbContext.Mechs.FirstOrDefaultAsync(m => 
-                    m.Chassis == content.Chassis && m.Model == content.Model);
+                //existingMech = await _dbContext.Mechs.FirstOrDefaultAsync(m => 
+                //    m.Chassis == content.Chassis && m.Model == content.Model);
                 
                 var result = await _importService.ImportMtfFileAsync(filePath, fileContent);
                 
-                if (existingMech != null)
-                {
-                    updated++;
-                    _logger.LogInformation("Updated MTF file: {FilePath}", filePath);
-                }
-                else
-                {
-                    added++;
-                    _logger.LogInformation("Added new MTF file: {FilePath}", filePath);
-                }
+                // if (existingMech != null)
+                // {
+                //     updated++;
+                //     _logger.LogInformation("Updated MTF file: {FilePath}", filePath);
+                // }
+                // else
+                // {
+                //     added++;
+                //     _logger.LogInformation("Added new MTF file: {FilePath}", filePath);
+                // }
             }
             catch (Exception ex)
             {

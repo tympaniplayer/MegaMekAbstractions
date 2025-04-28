@@ -226,7 +226,7 @@ public class MtfImportService
                 if (equipment is Weapon weapon)
                 {
                     equipmentEntity.Heat = weapon.Heat;
-                    equipmentEntity.Damage = weapon.Damage.ToString();
+                    equipmentEntity.Damage = weapon.Damage;
                     equipmentEntity.MinimumRange = 0;  // Default if not specified
                     equipmentEntity.ShortRange = weapon.ShortRange;
                     equipmentEntity.MediumRange = weapon.MediumRange;
