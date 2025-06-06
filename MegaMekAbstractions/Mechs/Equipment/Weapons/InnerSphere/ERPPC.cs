@@ -8,7 +8,7 @@ public sealed class ERPPC : Weapon
     /// <summary>
     /// Initializes a new instance of the <see cref="ERPPC"/> class.
     /// </summary>
-    public ERPPC() : base("ER PPC", 3, 7.0m, 15, 0, 7, 14, 23, 10, DamageTypeFlags.DirectFireEnergy Electronics)
+    public ERPPC() : base("ER PPC", 3, 7.0m, 15, 0, 7, 14, 23, 10, DamageTypeFlags.DirectFireEnergy | DamageTypeFlags.Electronics)
     {
         ShotsPerTon = 0;
     }

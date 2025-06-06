@@ -8,7 +8,7 @@ public sealed class Heavymediumlaser : Weapon
     /// <summary>
     /// Initializes a new instance of the <see cref="Heavymediumlaser"/> class.
     /// </summary>
-    public Heavymediumlaser() : base("Heavy Medium Laser", 2, 1.0m, 7, 0, 3, 6, 9, 10, DamageTypeFlags.DirectFireEnergy Electronics)
+    public Heavymediumlaser() : base("Heavy Medium Laser", 2, 1.0m, 7, 0, 3, 6, 9, 10, DamageTypeFlags.DirectFireEnergy | DamageTypeFlags.Electronics)
     {
         ShotsPerTon = 0;
     }
