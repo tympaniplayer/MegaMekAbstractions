@@ -52,7 +52,7 @@ public enum Quirk
     InnerSphereUbiquitous,
     ClanUbiquitous,
     VariableRangeLong,
-    VariableRangShort,
+    VariableRangeShort,
     VestigialHandsLeftArm,
     VestigialHandsRightArm,
     VtolRotorCoaxial,
