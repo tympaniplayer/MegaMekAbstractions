@@ -16,7 +16,7 @@ For more information about MegaMek, visit [the official MegaMek website](https:/
 Install via NuGet:
 
 ```bash
-dotnet add package Mega-Mek-Abstractions
+dotnet add package MegaMekAbstractions
 ```
 
 ## Usage
