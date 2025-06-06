@@ -44,6 +44,18 @@ public class MtfFileReaderTests
         await action.Should().ThrowAsync<FileNotFoundException>();
     }
 
+    [Theory]
+    [InlineData(null)]
+    [InlineData("")]
+    public async Task ReadFileContentAsync_WithNullOrEmptyPath_ShouldThrowArgumentException(string? filePath)
+    {
+        // Act
+        var action = () => _reader.ReadFileContentAsync(filePath!);
+
+        // Assert
+        await action.Should().ThrowAsync<ArgumentException>();
+    }
+
     [Fact]
     public void GetSupportedExtensions_ShouldReturnMtfExtension()
     {
