@@ -249,13 +249,7 @@ public static class MtfWeaponAndCriticalParser
         }
         
         // Create the weapon
-        return new Weapon
-        {
-            Name = weaponName,
-            CriticalSlots = slots,
-            Tonnage = tonnage,
-            Heat = heat
-        };
+        return new GenericWeapon(weaponName, slots, (decimal)tonnage, heat);
     }
     
     private static MechEquipment CreateEquipment(string equipmentName)
@@ -263,35 +257,23 @@ public static class MtfWeaponAndCriticalParser
         // For ammo and other equipment
         if (equipmentName.Contains("Ammo"))
         {
-            return new Ammunition
-            {
-                Name = equipmentName,
-                CriticalSlots = 1,
-                Tonnage = 1.0,
-                AmmoType = equipmentName.Replace("Ammo", "").Trim(),
-                ShotsPerTon = 20
-            };
+            return new Ammunition(
+                equipmentName,
+                1,
+                1.0m,
+                0,
+                equipmentName.Replace("Ammo", string.Empty).Trim(),
+                20);
         }
         else if (equipmentName.Contains("Heat Sink"))
         {
-            // Since MechEquipment is abstract, we'll use Weapon as a generic container here
-            return new Weapon
-            {
-                Name = equipmentName,
-                CriticalSlots = 1,
-                Tonnage = 1.0,
-                Heat = -3 // Heat sinks dissipate heat
-            };
+            // Generic representation for heat sinks
+            return new GenericWeapon(equipmentName, 1, 1.0m, -3);
         }
         else
         {
             // Generic equipment
-            return new Weapon
-            {
-                Name = equipmentName,
-                CriticalSlots = 1,
-                Tonnage = 1.0
-            };
+            return new GenericWeapon(equipmentName, 1, 1.0m, 0);
         }
     }
     
