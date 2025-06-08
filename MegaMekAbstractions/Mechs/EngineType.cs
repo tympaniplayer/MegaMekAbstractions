@@ -5,14 +5,19 @@ namespace MegaMekAbstractions.Mechs;
 /// </summary>
 public enum EngineType
 {
-    Standard,
-    XL,
-    Light,
-    Compact,
-    ICE,
-    XXL,
-    Primitive,
-    Fuel_Cell,
-    Fission,
-    None
+    ICE = 0,
+    Standard = 1,
+    XL = 2,
+    XXL = 3,
+    Fuel_Cell = 4,
+    Light = 5,
+    Compact = 6,
+    Fission = 7,
+    None = 8,
+    MagLev = 9,
+    Steam = 10,
+    Battery = 11,
+    Solar = 12,
+    External = 13,
+    Primitive = 14
 }
