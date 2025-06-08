@@ -11,12 +11,16 @@ public class MtfParserTests
     private readonly MtfParser _parser;
     private readonly string _sampleMtfPath;
     private readonly string _sampleMtfContent;
+    private readonly string _modernMtfPath;
+    private readonly string _modernMtfContent;
 
     public MtfParserTests()
     {
         _parser = new MtfParser();
         _sampleMtfPath = Path.Combine("TestData", "Mechs", "MAD-3R.mtf");
         _sampleMtfContent = File.ReadAllText(_sampleMtfPath);
+        _modernMtfPath = Path.Combine("TestData", "Mechs", "Archer C 2.mtf");
+        _modernMtfContent = File.ReadAllText(_modernMtfPath);
     }
 
     [Fact]
@@ -72,6 +76,20 @@ public class MtfParserTests
         mech.Quirks.Should().Contain(Quirk.LowProfile);
         mech.Quirks.Should().Contain(Quirk.DirectTorsoMount);
         mech.Quirks.Should().Contain(Quirk.ExposedLinkage);
+    }
+
+    [Fact]
+    public async Task ParseMechDataAsync_WithModernFile_ShouldParseAdditionalFields()
+    {
+        var mech = await _parser.ParseMechDataAsync(_modernMtfContent);
+
+        mech.Myomer.Should().Be("Standard");
+        mech.Manufacturer.Should().Be("Refit");
+        mech.PrimaryFactory.Should().Be("Various");
+        mech.SystemManufacturers.Should().ContainKey("ENGINE");
+        mech.Overview.Should().StartWith("One of the most iconic");
+        mech.Quirks.Should().Contain(Quirk.BattleFistsLeftArm);
+        mech.Quirks.Should().Contain(Quirk.InnerSphereUbiquitous);
     }
 
     [Fact]
