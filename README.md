@@ -37,6 +37,32 @@ Console.WriteLine($"Mass: {mech.Mass} tons");
 Console.WriteLine($"Tech Base: {mech.TechBase}");
 ```
 
+## Tutorial
+
+This section shows how to parse an official MTF file from the [MegaMek repository](https://github.com/MegaMek/megamek) and view it or import it with the tools included in this solution.
+
+1. Download the sample [Archer ARC-2R](https://raw.githubusercontent.com/MegaMek/megamek/master/megamek/data/mekfiles/meks/3039u/Archer%20ARC-2R.mtf) file from the MegaMek project.
+
+### Viewing the record sheet
+
+Use `MegaMekViewer` to render the MTF file with `RecordSheetRenderer`:
+
+```bash
+# from the repository root
+dotnet run --project MegaMekViewer path/to/Archer\ ARC-2R.mtf
+```
+
+### Importing with MegaMekDb.Console
+
+The database console tool can import one or more MTF files:
+
+```bash
+# from the repository root
+dotnet run --project MegaMekDb.Console import path/to/mtf/files [recursive]
+```
+
+The linked MegaMek repository above is the authoritative source for all data files.
+
 ## Contributing
 
 1. Fork the repository
