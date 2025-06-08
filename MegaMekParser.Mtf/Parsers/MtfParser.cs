@@ -39,7 +39,15 @@ public class MtfParser : IMtfParser
         "Cockpit",
         "Heat Sinks",
         "Armor",
-        "Weapons"
+        "Weapons",
+        "myomer",
+        "manufacturer",
+        "primaryfactory",
+        "systemmanufacturer",
+        "overview",
+        "capabilities",
+        "deployment",
+        "history"
     };
 
     private static readonly Regex SectionHeaderRegex = new(@"^(" + string.Join("|", MainSections.Select(Regex.Escape)) + @"):.*$", RegexOptions.Compiled | RegexOptions.IgnoreCase);

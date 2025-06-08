@@ -22,6 +22,16 @@ public class Mech
     public required IList<Quirk> Quirks { get; set; }
     public int Mass { get; set; }
 
+    // Extended metadata from newer MTF files
+    public string Myomer { get; set; } = string.Empty;
+    public string Manufacturer { get; set; } = string.Empty;
+    public string PrimaryFactory { get; set; } = string.Empty;
+    public Dictionary<string, string> SystemManufacturers { get; set; } = new();
+    public string Overview { get; set; } = string.Empty;
+    public string Capabilities { get; set; } = string.Empty;
+    public string Deployment { get; set; } = string.Empty;
+    public string History { get; set; } = string.Empty;
+
     // Core Systems
     public required Engine Engine { get; set; }
     public required Gyro Gyro { get; set; }

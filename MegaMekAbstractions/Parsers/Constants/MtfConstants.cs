@@ -119,6 +119,46 @@ public static class MtfConstants
         /// Cockpit section identifier
         /// </summary>
         public const string Cockpit = "Cockpit:";
+
+        /// <summary>
+        /// Myomer type section identifier
+        /// </summary>
+        public const string Myomer = "myomer:";
+
+        /// <summary>
+        /// Manufacturer section identifier
+        /// </summary>
+        public const string Manufacturer = "manufacturer:";
+
+        /// <summary>
+        /// Primary factory section identifier
+        /// </summary>
+        public const string PrimaryFactory = "primaryfactory:";
+
+        /// <summary>
+        /// System manufacturer section identifier
+        /// </summary>
+        public const string SystemManufacturer = "systemmanufacturer:";
+
+        /// <summary>
+        /// Overview text section identifier
+        /// </summary>
+        public const string Overview = "overview:";
+
+        /// <summary>
+        /// Capabilities text section identifier
+        /// </summary>
+        public const string Capabilities = "capabilities:";
+
+        /// <summary>
+        /// Deployment text section identifier
+        /// </summary>
+        public const string Deployment = "deployment:";
+
+        /// <summary>
+        /// History text section identifier
+        /// </summary>
+        public const string History = "history:";
     }
 
     /// <summary>

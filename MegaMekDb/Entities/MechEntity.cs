@@ -28,6 +28,16 @@ public class MechEntity
     public GroundRole GroundRole { get; set; }
     public int Mass { get; set; }
 
+    // Extended metadata
+    public string Myomer { get; set; } = string.Empty;
+    public string Manufacturer { get; set; } = string.Empty;
+    public string PrimaryFactory { get; set; } = string.Empty;
+    public string SystemManufacturersJson { get; set; } = string.Empty;
+    public string Overview { get; set; } = string.Empty;
+    public string Capabilities { get; set; } = string.Empty;
+    public string Deployment { get; set; } = string.Empty;
+    public string History { get; set; } = string.Empty;
+
     // Core Systems
     public int EngineRating { get; set; }
     public EngineType EngineType { get; set; }

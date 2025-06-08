@@ -27,7 +27,15 @@ internal static class MtfSectionParsers
         { MtfConstants.Sections.WalkMP, ParseWalkMP },
         { MtfConstants.Sections.JumpMP, ParseJumpMP },
         { MtfConstants.Sections.Quirk, ParseQuirk },
-        { MtfConstants.Sections.WeaponQuirk, ParseWeaponQuirk }
+        { MtfConstants.Sections.WeaponQuirk, ParseWeaponQuirk },
+        { MtfConstants.Sections.Myomer, ParseMyomer },
+        { MtfConstants.Sections.Manufacturer, ParseManufacturer },
+        { MtfConstants.Sections.PrimaryFactory, ParsePrimaryFactory },
+        { MtfConstants.Sections.SystemManufacturer, ParseSystemManufacturer },
+        { MtfConstants.Sections.Overview, ParseOverview },
+        { MtfConstants.Sections.Capabilities, ParseCapabilities },
+        { MtfConstants.Sections.Deployment, ParseDeployment },
+        { MtfConstants.Sections.History, ParseHistory }
     };
 
     public static void ParseSection(string sectionName, string[] lines, Mech mech)
@@ -415,21 +423,21 @@ internal static class MtfSectionParsers
                 {
                     "command_mech" => (Quirk?)Quirk.CommandMech,
                     "imp_life_support" => (Quirk?)Quirk.ImprovedLifeSupport,
-                    "battle_fists_la" => (Quirk?)Quirk.LowArms,
-                    "battle_fists_ra" => (Quirk?)Quirk.NoEject,
-                    "imp_target_short" => (Quirk?)Quirk.FlawedCooling,
-                    "imp_target_med" => (Quirk?)Quirk.AntiAir,
-                    "imp_target_long" => (Quirk?)Quirk.NonStandard,
-                    "easy_maintain" => (Quirk?)Quirk.EasyPilot,
-                    "ext_twist" => (Quirk?)Quirk.Unbalanced,
-                    "pro_actuator" => (Quirk?)Quirk.OverheadArms,
-                    "imp_com" => (Quirk?)Quirk.ReinforcedLegs,
-                    "imp_sensors" => (Quirk?)Quirk.SensorGhosts,
-                    "bad_rep_is" => (Quirk?)Quirk.FlawedCooling,
-                    "bad_rep_clan" => (Quirk?)Quirk.FineManipulators,
-                    "difficult_maintain" => (Quirk?)Quirk.PoorPerformance,
-                    "ubiquitous_is" => (Quirk?)Quirk.DifficultMaintain,
-                    "ubiquitous_clan" => (Quirk?)Quirk.Obsolete,
+                    "battle_fists_la" => (Quirk?)Quirk.BattleFistsLeftArm,
+                    "battle_fists_ra" => (Quirk?)Quirk.BattleFistsRightArm,
+                    "imp_target_short" => (Quirk?)Quirk.ImprovedTargetingShort,
+                    "imp_target_med" => (Quirk?)Quirk.ImprovedTargetingMedium,
+                    "imp_target_long" => (Quirk?)Quirk.ImprovedTargetingLong,
+                    "easy_maintain" => (Quirk?)Quirk.EasyToMaintain,
+                    "ext_twist" => (Quirk?)Quirk.ExtendedTorsoTwist,
+                    "pro_actuator" => (Quirk?)Quirk.ProtectedActuators,
+                    "imp_com" => (Quirk?)Quirk.ImprovedCommunications,
+                    "imp_sensors" => (Quirk?)Quirk.ImprovedSensors,
+                    "bad_rep_is" => (Quirk?)Quirk.InnerSphereBadReputation,
+                    "bad_rep_clan" => (Quirk?)Quirk.ClanBadReputation,
+                    "difficult_maintain" => (Quirk?)Quirk.DifficultMaintain,
+                    "ubiquitous_is" => (Quirk?)Quirk.InnerSphereUbiquitous,
+                    "ubiquitous_clan" => (Quirk?)Quirk.ClanUbiquitous,
                     _ => null
                 };
 
@@ -465,6 +473,102 @@ internal static class MtfSectionParsers
                 {
                     mech.Quirks.Add(quirk);
                 }
+            }
+        }
+    }
+
+    private static void ParseMyomer(string[] lines, Mech mech)
+    {
+        foreach (var line in lines)
+        {
+            if (line.StartsWith(MtfConstants.Sections.Myomer))
+            {
+                mech.Myomer = GetValue(line, MtfConstants.Sections.Myomer) ?? string.Empty;
+            }
+        }
+    }
+
+    private static void ParseManufacturer(string[] lines, Mech mech)
+    {
+        foreach (var line in lines)
+        {
+            if (line.StartsWith(MtfConstants.Sections.Manufacturer))
+            {
+                mech.Manufacturer = GetValue(line, MtfConstants.Sections.Manufacturer) ?? string.Empty;
+            }
+        }
+    }
+
+    private static void ParsePrimaryFactory(string[] lines, Mech mech)
+    {
+        foreach (var line in lines)
+        {
+            if (line.StartsWith(MtfConstants.Sections.PrimaryFactory))
+            {
+                mech.PrimaryFactory = GetValue(line, MtfConstants.Sections.PrimaryFactory) ?? string.Empty;
+            }
+        }
+    }
+
+    private static void ParseSystemManufacturer(string[] lines, Mech mech)
+    {
+        foreach (var line in lines)
+        {
+            if (line.StartsWith(MtfConstants.Sections.SystemManufacturer))
+            {
+                var value = GetValue(line, MtfConstants.Sections.SystemManufacturer);
+                if (!string.IsNullOrEmpty(value))
+                {
+                    var parts = value.Split(':', 2);
+                    if (parts.Length == 2)
+                    {
+                        mech.SystemManufacturers[parts[0]] = parts[1];
+                    }
+                }
+            }
+        }
+    }
+
+    private static void ParseOverview(string[] lines, Mech mech)
+    {
+        foreach (var line in lines)
+        {
+            if (line.StartsWith(MtfConstants.Sections.Overview))
+            {
+                mech.Overview = GetValue(line, MtfConstants.Sections.Overview) ?? string.Empty;
+            }
+        }
+    }
+
+    private static void ParseCapabilities(string[] lines, Mech mech)
+    {
+        foreach (var line in lines)
+        {
+            if (line.StartsWith(MtfConstants.Sections.Capabilities))
+            {
+                mech.Capabilities = GetValue(line, MtfConstants.Sections.Capabilities) ?? string.Empty;
+            }
+        }
+    }
+
+    private static void ParseDeployment(string[] lines, Mech mech)
+    {
+        foreach (var line in lines)
+        {
+            if (line.StartsWith(MtfConstants.Sections.Deployment))
+            {
+                mech.Deployment = GetValue(line, MtfConstants.Sections.Deployment) ?? string.Empty;
+            }
+        }
+    }
+
+    private static void ParseHistory(string[] lines, Mech mech)
+    {
+        foreach (var line in lines)
+        {
+            if (line.StartsWith(MtfConstants.Sections.History))
+            {
+                mech.History = GetValue(line, MtfConstants.Sections.History) ?? string.Empty;
             }
         }
     }

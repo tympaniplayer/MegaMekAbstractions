@@ -1,5 +1,6 @@
 using System.Security.Cryptography;
 using System.Text;
+using System.Text.Json;
 using MegaMekAbstractions.Mechs;
 using MegaMekAbstractions.Mechs.Equipment;
 using MegaMekAbstractions.Parsers.Interfaces;
@@ -153,6 +154,15 @@ public class MtfImportService
         mechEntity.RulesLevel = mech.RulesLevel;
         mechEntity.GroundRole = mech.GroundRole;
         mechEntity.Mass = mech.Mass;
+
+        mechEntity.Myomer = mech.Myomer;
+        mechEntity.Manufacturer = mech.Manufacturer;
+        mechEntity.PrimaryFactory = mech.PrimaryFactory;
+        mechEntity.Overview = mech.Overview;
+        mechEntity.Capabilities = mech.Capabilities;
+        mechEntity.Deployment = mech.Deployment;
+        mechEntity.History = mech.History;
+        mechEntity.SystemManufacturersJson = JsonSerializer.Serialize(mech.SystemManufacturers);
         
         // Core systems
         mechEntity.EngineRating = mech.Engine.Rating;
