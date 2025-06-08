@@ -14,7 +14,7 @@ public class MtfParserSampleFilesTests
     [InlineData("Catapult CPLT-C1.mtf", 65, "Catapult", "CPLT-C1", 260, EngineType.Standard, 4)]
     [InlineData("Warhammer WHM-6R.mtf", 70, "Warhammer", "WHM-6R", 280, EngineType.Standard, 4)]
     [InlineData("Atlas AS7-D.mtf", 100, "Atlas", "AS7-D", 300, EngineType.Standard, 3)]
-    [InlineData("Mad Cat (Timber Wolf) Prime.mtf", 75, "Mad Cat", "Prime", 375, EngineType.Standard, 5)]
+    [InlineData("Mad Cat (Timber Wolf) Prime.mtf", 75, "Mad Cat", "Prime", 375, EngineType.XL, 5)]
     [InlineData("Archer C 2.mtf", 70, "Archer", "C 2", 280, EngineType.Standard, 4)]
     [InlineData("Rifleman C 3.mtf", 60, "Rifleman", "C 3", 240, EngineType.Standard, 4)]
     [InlineData("Phoenix Hawk C.mtf", 45, "Phoenix Hawk", "C", 270, EngineType.XL, 6)]

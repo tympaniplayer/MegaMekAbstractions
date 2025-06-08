@@ -50,7 +50,7 @@ internal static class MtfSectionParsers
     {
         foreach (var line in lines)
         {
-            if (line.StartsWith(MtfConstants.Sections.Config))
+            if (line.StartsWith(MtfConstants.Sections.Config, StringComparison.OrdinalIgnoreCase))
             {
                 var configValue = GetValue(line, MtfConstants.Sections.Config);
                 mech.Configuration = ParseConfiguration(configValue);
@@ -63,7 +63,7 @@ internal static class MtfSectionParsers
     {
         foreach (var line in lines)
         {
-            if (line.StartsWith(MtfConstants.Sections.Mass))
+            if (line.StartsWith(MtfConstants.Sections.Mass, StringComparison.OrdinalIgnoreCase))
             {
                 var massValue = GetValue(line, MtfConstants.Sections.Mass);
                 if (int.TryParse(massValue, out int mass))
@@ -79,7 +79,7 @@ internal static class MtfSectionParsers
     {
         foreach (var line in lines)
         {
-            if (line.StartsWith(MtfConstants.Sections.Engine))
+            if (line.StartsWith(MtfConstants.Sections.Engine, StringComparison.OrdinalIgnoreCase))
             {
                 var engineValue = GetValue(line, MtfConstants.Sections.Engine);
                 ParseEngineDetails(engineValue, mech.Engine);
@@ -92,7 +92,7 @@ internal static class MtfSectionParsers
     {
         foreach (var line in lines)
         {
-            if (line.StartsWith(MtfConstants.Sections.TechBase))
+            if (line.StartsWith(MtfConstants.Sections.TechBase, StringComparison.OrdinalIgnoreCase))
             {
                 var techBaseValue = GetValue(line, MtfConstants.Sections.TechBase);
                 mech.TechBase = ParseTechBaseValue(techBaseValue);
@@ -105,7 +105,7 @@ internal static class MtfSectionParsers
     {
         foreach (var line in lines)
         {
-            if (line.StartsWith(MtfConstants.Sections.Source))
+            if (line.StartsWith(MtfConstants.Sections.Source, StringComparison.OrdinalIgnoreCase))
             {
                 mech.Source = GetValue(line, MtfConstants.Sections.Source) ?? "Unknown";
                 break;
@@ -117,11 +117,11 @@ internal static class MtfSectionParsers
     {
         foreach (var line in lines)
         {
-            if (line.StartsWith(MtfConstants.Sections.Model))
+            if (line.StartsWith(MtfConstants.Sections.Model, StringComparison.OrdinalIgnoreCase))
             {
                 mech.Model = GetValue(line, MtfConstants.Sections.Model) ?? "Unknown";
             }
-            else if (line.StartsWith(MtfConstants.Sections.Chassis))
+            else if (line.StartsWith(MtfConstants.Sections.Chassis, StringComparison.OrdinalIgnoreCase))
             {
                 mech.Chassis = GetValue(line, MtfConstants.Sections.Chassis) ?? "Unknown";
             }
@@ -134,26 +134,32 @@ internal static class MtfSectionParsers
         {
             throw new MtfParseException("Engine specification is null", "unknown", 0, "Engine");
         }
-        // Format: "Rating Type Engine" (e.g., "300 Fusion Engine" or "200 XL Engine")
-        var parts = engineSpec.Split(' ');
+        // Format can include additional tokens like "(Clan)" or "Engine(IS)"
+        var parts = engineSpec.Split(' ', StringSplitOptions.RemoveEmptyEntries);
         if (parts.Length >= 1 && int.TryParse(parts[0], out int rating))
         {
             engine.Rating = rating;
         }
 
-        var engineTypeStr = string.Join(" ", parts.Skip(1));
-        engine.Type = engineTypeStr.ToLower() switch
-        {
-            "xl engine" => EngineType.XL,
-            "light engine" => EngineType.Light,
-            "compact engine" => EngineType.Compact,
-            "ice" => EngineType.ICE,
-            "xxl engine" => EngineType.XXL,
-            "primitive engine" => EngineType.Primitive,
-            "fuel cell" => EngineType.Fuel_Cell,
-            "fission" => EngineType.Fission,
-            _ => EngineType.Standard
-        };
+        var engineTypeStr = engineSpec.Substring(parts[0].Length).ToLower();
+        if (engineTypeStr.Contains("xl"))
+            engine.Type = EngineType.XL;
+        else if (engineTypeStr.Contains("light"))
+            engine.Type = EngineType.Light;
+        else if (engineTypeStr.Contains("compact"))
+            engine.Type = EngineType.Compact;
+        else if (engineTypeStr.Contains("xxl"))
+            engine.Type = EngineType.XXL;
+        else if (engineTypeStr.Contains("ice"))
+            engine.Type = EngineType.ICE;
+        else if (engineTypeStr.Contains("primitive"))
+            engine.Type = EngineType.Primitive;
+        else if (engineTypeStr.Contains("fuel cell"))
+            engine.Type = EngineType.Fuel_Cell;
+        else if (engineTypeStr.Contains("fission"))
+            engine.Type = EngineType.Fission;
+        else
+            engine.Type = EngineType.Standard;
     }
 
     private static Configuration ParseConfiguration(string? config)
@@ -192,7 +198,7 @@ internal static class MtfSectionParsers
     {
         foreach (var line in lines)
         {
-            if (line.StartsWith(MtfConstants.Sections.HeatSinks))
+            if (line.StartsWith(MtfConstants.Sections.HeatSinks, StringComparison.OrdinalIgnoreCase))
             {
                 var value = GetValue(line, MtfConstants.Sections.HeatSinks);
                 if (value?.Contains("Double") == true)
@@ -217,7 +223,7 @@ internal static class MtfSectionParsers
     {
         foreach (var line in lines)
         {
-            if (line.StartsWith(MtfConstants.Sections.Structure))
+            if (line.StartsWith(MtfConstants.Sections.Structure, StringComparison.OrdinalIgnoreCase))
             {
                 var value = GetValue(line, MtfConstants.Sections.Structure)?.ToLower();
                 mech.Structure.Type = value switch
@@ -238,7 +244,7 @@ internal static class MtfSectionParsers
     {
         foreach (var line in lines)
         {
-            if (line.StartsWith(MtfConstants.Sections.Armor))
+            if (line.StartsWith(MtfConstants.Sections.Armor, StringComparison.OrdinalIgnoreCase))
             {
                 // Parse armor type
                 var value = GetValue(line, MtfConstants.Sections.Armor)?.ToLower();
@@ -324,7 +330,7 @@ internal static class MtfSectionParsers
     {
         foreach (var line in lines)
         {
-            if (line.StartsWith(MtfConstants.Sections.Gyro))
+            if (line.StartsWith(MtfConstants.Sections.Gyro, StringComparison.OrdinalIgnoreCase))
             {
                 var value = GetValue(line, MtfConstants.Sections.Gyro);
                 if (string.IsNullOrEmpty(value))
@@ -340,7 +346,7 @@ internal static class MtfSectionParsers
     {
         foreach (var line in lines)
         {
-            if (line.StartsWith(MtfConstants.Sections.Cockpit))
+            if (line.StartsWith(MtfConstants.Sections.Cockpit, StringComparison.OrdinalIgnoreCase))
             {
                 var value = GetValue(line, MtfConstants.Sections.Cockpit);
                 if (string.IsNullOrEmpty(value))
@@ -356,7 +362,7 @@ internal static class MtfSectionParsers
     {
         foreach (var line in lines)
         {
-            if (line.StartsWith(MtfConstants.Sections.WalkMP))
+            if (line.StartsWith(MtfConstants.Sections.WalkMP, StringComparison.OrdinalIgnoreCase))
             {
                 var value = GetValue(line, MtfConstants.Sections.WalkMP);
                 if (int.TryParse(value, out int mp))
@@ -372,7 +378,7 @@ internal static class MtfSectionParsers
     {
         foreach (var line in lines)
         {
-            if (line.StartsWith(MtfConstants.Sections.JumpMP))
+            if (line.StartsWith(MtfConstants.Sections.JumpMP, StringComparison.OrdinalIgnoreCase))
             {
                 var value = GetValue(line, MtfConstants.Sections.JumpMP);
                 if (int.TryParse(value, out int mp))
@@ -385,12 +391,16 @@ internal static class MtfSectionParsers
 
     private static string? GetValue(string line, string key)
     {
-        if (string.IsNullOrEmpty(line) || !line.StartsWith(key))
+        if (string.IsNullOrEmpty(line) || !line.StartsWith(key, StringComparison.OrdinalIgnoreCase))
         {
             throw new MtfParseException($"Invalid line format: {line}", "unknown", 0, key);
         }
 
-        string value = line[key.Length..].Trim();
+        string value = line.Substring(key.Length).Trim();
+        if (value.StartsWith(":"))
+        {
+            value = value[1..].Trim();
+        }
         return string.IsNullOrEmpty(value) ? null : value;
     }
 
@@ -406,7 +416,7 @@ internal static class MtfSectionParsers
             if (string.IsNullOrEmpty(quirkValue)) continue;
 
             // Try to convert quirk name to enum
-            var enumName = string.Concat(quirkValue.Split([' ', '_'], StringSplitOptions.RemoveEmptyEntries)
+            var enumName = string.Concat(quirkValue.Split(new[] { ' ', '_' }, StringSplitOptions.RemoveEmptyEntries)
                 .Select(s => char.ToUpper(s[0]) + s[1..].ToLower()));
 
             if (Enum.TryParse(enumName, true, out Quirk quirk))
@@ -464,7 +474,7 @@ internal static class MtfSectionParsers
             var quirkName = parts[0].ToLower();
 
             // Convert to PascalCase enum name
-            var enumName = string.Concat(quirkName.Split([' ', '_'], StringSplitOptions.RemoveEmptyEntries)
+            var enumName = string.Concat(quirkName.Split(new[] { ' ', '_' }, StringSplitOptions.RemoveEmptyEntries)
                 .Select(s => char.ToUpper(s[0]) + s[1..].ToLower()));
 
             if (Enum.TryParse(enumName, true, out Quirk quirk))
@@ -481,7 +491,7 @@ internal static class MtfSectionParsers
     {
         foreach (var line in lines)
         {
-            if (line.StartsWith(MtfConstants.Sections.Myomer))
+            if (line.StartsWith(MtfConstants.Sections.Myomer, StringComparison.OrdinalIgnoreCase))
             {
                 mech.Myomer = GetValue(line, MtfConstants.Sections.Myomer) ?? string.Empty;
             }
@@ -492,7 +502,7 @@ internal static class MtfSectionParsers
     {
         foreach (var line in lines)
         {
-            if (line.StartsWith(MtfConstants.Sections.Manufacturer))
+            if (line.StartsWith(MtfConstants.Sections.Manufacturer, StringComparison.OrdinalIgnoreCase))
             {
                 mech.Manufacturer = GetValue(line, MtfConstants.Sections.Manufacturer) ?? string.Empty;
             }
@@ -503,7 +513,7 @@ internal static class MtfSectionParsers
     {
         foreach (var line in lines)
         {
-            if (line.StartsWith(MtfConstants.Sections.PrimaryFactory))
+            if (line.StartsWith(MtfConstants.Sections.PrimaryFactory, StringComparison.OrdinalIgnoreCase))
             {
                 mech.PrimaryFactory = GetValue(line, MtfConstants.Sections.PrimaryFactory) ?? string.Empty;
             }
@@ -514,7 +524,7 @@ internal static class MtfSectionParsers
     {
         foreach (var line in lines)
         {
-            if (line.StartsWith(MtfConstants.Sections.SystemManufacturer))
+            if (line.StartsWith(MtfConstants.Sections.SystemManufacturer, StringComparison.OrdinalIgnoreCase))
             {
                 var value = GetValue(line, MtfConstants.Sections.SystemManufacturer);
                 if (!string.IsNullOrEmpty(value))
@@ -533,7 +543,7 @@ internal static class MtfSectionParsers
     {
         foreach (var line in lines)
         {
-            if (line.StartsWith(MtfConstants.Sections.Overview))
+            if (line.StartsWith(MtfConstants.Sections.Overview, StringComparison.OrdinalIgnoreCase))
             {
                 mech.Overview = GetValue(line, MtfConstants.Sections.Overview) ?? string.Empty;
             }
@@ -544,7 +554,7 @@ internal static class MtfSectionParsers
     {
         foreach (var line in lines)
         {
-            if (line.StartsWith(MtfConstants.Sections.Capabilities))
+            if (line.StartsWith(MtfConstants.Sections.Capabilities, StringComparison.OrdinalIgnoreCase))
             {
                 mech.Capabilities = GetValue(line, MtfConstants.Sections.Capabilities) ?? string.Empty;
             }
@@ -555,7 +565,7 @@ internal static class MtfSectionParsers
     {
         foreach (var line in lines)
         {
-            if (line.StartsWith(MtfConstants.Sections.Deployment))
+            if (line.StartsWith(MtfConstants.Sections.Deployment, StringComparison.OrdinalIgnoreCase))
             {
                 mech.Deployment = GetValue(line, MtfConstants.Sections.Deployment) ?? string.Empty;
             }
@@ -566,7 +576,7 @@ internal static class MtfSectionParsers
     {
         foreach (var line in lines)
         {
-            if (line.StartsWith(MtfConstants.Sections.History))
+            if (line.StartsWith(MtfConstants.Sections.History, StringComparison.OrdinalIgnoreCase))
             {
                 mech.History = GetValue(line, MtfConstants.Sections.History) ?? string.Empty;
             }
