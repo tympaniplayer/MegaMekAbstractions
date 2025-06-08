@@ -70,7 +70,7 @@ public enum Quirk
     EmInterference,
     ExposedActuators,
     FlawedCooling,
-    FragileEngine,
+    FragileFuel,
     GasHog,
     HardPilot,
     IllegalDesign,
@@ -83,6 +83,12 @@ public enum Quirk
     OverSized,
     PoorLifeSupport,
     PoorPerformance,
+    PoorSealing,
+    PoorTargetingLong,
+    PoorTargetingMedium,
+    PoorTargetingShort,
+    PoorWork,
+    Prototype,
     Ramshackle,
     SensorGhosts,
     SusceptibleCws, // Not sure what this means yet
@@ -102,5 +108,7 @@ public enum Quirk
     NoCooling,
     NonFunctional,
     PoorCooling,
-    StaticFeed
+    StaticFeed,
+    MisrepairedWeapon,
+    MisreplacedWeapon
 }
