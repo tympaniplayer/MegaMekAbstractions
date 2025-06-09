@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net9.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <PackageId>MegaMekParser.Mtf</PackageId>
@@ -17,7 +17,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\MegaMekAbstractions\MegaMekAbstractions.csproj" />
-    <None Include="README.md" Pack="true" PackagePath="" />
+    <None Include="README.md" Pack="true" PackagePath="\" />
   </ItemGroup>
 
 </Project>
